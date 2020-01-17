@@ -1,6 +1,5 @@
 package com.mockapi.mockapi.service.impl;
 
-import com.mockapi.mockapi.config.jwt.UserPrincipal;
 import com.mockapi.mockapi.config.jwt1.TokenUtils;
 import com.mockapi.mockapi.exception.ApiRequestException;
 import com.mockapi.mockapi.model.Employee;

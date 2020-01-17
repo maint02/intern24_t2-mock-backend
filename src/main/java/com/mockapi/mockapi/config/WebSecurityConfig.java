@@ -3,8 +3,6 @@ package com.mockapi.mockapi.config;
 //import com.mockapi.mockapi.config.jwt.JWTConfigurer;
 
 import com.mockapi.mockapi.config.firewall.RequestRejectedExceptionFilter;
-import com.mockapi.mockapi.config.jwt.JwtAuthenticationFilter;
-import com.mockapi.mockapi.config.jwt.JwtAuthorizationFilter;
 import com.mockapi.mockapi.config.jwt1.RestAuthenticationEntryPoint;
 import com.mockapi.mockapi.config.jwt1.TokenAuthenticationFilter;
 import com.mockapi.mockapi.config.jwt1.TokenUtils;
