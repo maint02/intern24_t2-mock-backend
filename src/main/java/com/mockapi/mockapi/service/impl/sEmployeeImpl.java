@@ -28,6 +28,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -99,11 +100,11 @@ public class sEmployeeImpl implements ISEmployeeService {
 
             } else {
                 String pw = RandomPassword.pwGenerate();
-
                 emp.set_actived(false);
                 emp.setPassword(passwordEncoder.encode(pw));
                 emp.getRoles().add(roleRepo.findByName(Constants.ROLE_PUBLIC));
                 emp.set_actived(true);
+                emp.setCreated_date(new Date());
                 emp = employeeRepo.save(emp);
                 SimpleMailMessage message = new SimpleMailMessage();
                 message.setTo(employeeRequest.getEmail());
@@ -217,7 +218,8 @@ public class sEmployeeImpl implements ISEmployeeService {
         long timeDifference = timeProvider.timeDifferenceInMinutes(timeProvider.now(), confirmationToken.getDatetimeCreated());
 
         if (timeDifference < 30) {
-            emp.getId();
+            emp.set_actived(true);
+            emp.setLast_access(new Date());
             employeeRepo.save(emp);
             confirmationToken.setUsed(true);
             confirmationTokenRepo.save(confirmationToken);
@@ -250,20 +252,6 @@ public class sEmployeeImpl implements ISEmployeeService {
                if(findIH(emp.getId())!=null){
                    issueHistoryRepo.delete(findIH(emp.getId()));
                }
-//                emp.getEmployee_issues().forEach(ei -> {
-//                    Employee_Issue employeeIssue = employeeIssueRepo.findByEmployeeId(emp.getId());
-//                    employeeIssueRepo.delete(employeeIssue);
-//                });
-//                emp.getIssues_histories().forEach(ih -> {
-//                    Issues_History issuesHistory = issueHistoryRepo.findByUpdatePerson(emp.getId());
-//                    issueHistoryRepo.updateIH();
-//                });
-//                emp.getNews().forEach(ne -> {
-//                    News news = newsRepo.findByEmployeeId(emp.getId());
-//                    newsRepo.delete(news);
-//                });
-//                    ConfirmationToken token  = confirmationTokenRepo.findByEmployeeId(emp.getId());
-//                    confirmationTokenRepo.delete(token);
                 employeeDAO.deleteRoleEmp(emp.getId());
             }
             employeeRepo.delete(emp);

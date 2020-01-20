@@ -22,7 +22,7 @@ public class Department {
         @Column(name = "ID")
         private long id;
 
-        @OneToMany(mappedBy = "department",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+        @OneToMany(mappedBy = "department",cascade = CascadeType.ALL)
         @JsonManagedReference(value = "employee-department")
         private List<Employee> employees;
 

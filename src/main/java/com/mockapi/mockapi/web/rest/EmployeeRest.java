@@ -89,12 +89,6 @@ public class EmployeeRest {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
-    @GetMapping("/verify-account/{token}")
-    public ResponseEntity verifyUserAccount(@PathVariable String token) {
-        employeeService.activateAccount(token);
-        return ResponseEntity.ok().build();
-    }
-
     @GetMapping("/allrp")
     public ResponseEntity<GetListDataResponseDTO<EmployeeDTO>> getAll(){
         log.info("--request to GET All Employee: {} ");

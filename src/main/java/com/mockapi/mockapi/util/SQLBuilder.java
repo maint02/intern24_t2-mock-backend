@@ -15,6 +15,7 @@ import java.nio.file.Paths;
 public class SQLBuilder {
     public static final String SQL_MODULE_EMPLOYEES = "employee";
     public static final String SQL_MODULE_EMP_ROLE = "employee_role";
+    public static final String SQL_MODULE_NEWS = "news";
     public static String getSqlQueryById(String module,
                                          String queryId) {
         File folder = null;

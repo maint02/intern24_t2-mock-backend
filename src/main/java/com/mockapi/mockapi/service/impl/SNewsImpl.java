@@ -3,15 +3,19 @@ package com.mockapi.mockapi.service.impl;
 import com.mockapi.mockapi.model.News;
 import com.mockapi.mockapi.repository.EmployeeRepo;
 import com.mockapi.mockapi.repository.NewsCategoryRepo;
+import com.mockapi.mockapi.repository.NewsDao;
 import com.mockapi.mockapi.repository.NewsRepo;
 import com.mockapi.mockapi.service.ISNewsService;
 import com.mockapi.mockapi.web.dto.NewsDTO;
 import com.mockapi.mockapi.web.dto.request.NewsRequest;
+import com.mockapi.mockapi.web.dto.request.SearchNewsRequest;
 import com.mockapi.mockapi.web.dto.response.GetListDataResponseDTO;
 import com.mockapi.mockapi.web.dto.response.GetSingleDataResponseDTO;
+import com.mockapi.mockapi.web.dto.response.resp.NewsResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,6 +26,7 @@ import java.util.List;
 @Transactional
 @Slf4j
 public class SNewsImpl implements ISNewsService {
+
     @Autowired
     private NewsRepo newsRepo;
 
@@ -33,21 +38,18 @@ public class SNewsImpl implements ISNewsService {
 
     @Autowired
     private ModelMapper modelMapper;
-    @Override
-    public GetListDataResponseDTO<NewsDTO> getAllNews() {
-        GetListDataResponseDTO<NewsDTO> result = new GetListDataResponseDTO<>();
-        List<News> data = newsRepo.findAll();
-        List<NewsDTO> dtos = new ArrayList<>();
-        try{
-            data.forEach(ne ->{
-                NewsDTO newsDTO = modelMapper.map(ne,NewsDTO.class);
-                dtos.add(newsDTO);
 
-            });
-            result.setValue(dtos);
-        }catch (Exception ex){
-            log.error(ex.getMessage(),ex);
-        }
+    @Autowired
+    private NewsDao newsDao;
+
+    @Override
+    public GetListDataResponseDTO<NewsResponse> getAllNews(SearchNewsRequest request) {
+        log.info("--request News to getAllByParmas is -----");
+        GetListDataResponseDTO<NewsResponse> result = new GetListDataResponseDTO<>();
+        Page<NewsResponse> rawDatas = newsDao.getAll(request);
+        System.out.println("content!!!!!!"+rawDatas.getContent() +"---- size"+rawDatas.getSize());
+        result.setResult(rawDatas.getContent(),rawDatas.getTotalElements(),rawDatas.getTotalPages());
+        log.info("--response to get list employee by params: " + result.getMessage());
         return result;
     }
 

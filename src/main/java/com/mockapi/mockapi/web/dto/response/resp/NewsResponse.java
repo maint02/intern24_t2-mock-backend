@@ -18,4 +18,8 @@ public class NewsResponse extends BaseDTO {
     private String summary;
 
     private String content;
+
+    private String employee;
+
+    private String newsCategory;
 }
