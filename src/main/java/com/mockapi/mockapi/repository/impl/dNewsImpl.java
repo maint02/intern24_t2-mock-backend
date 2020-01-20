@@ -37,15 +37,30 @@ public class dNewsImpl implements NewsDao {
         try {
             StringBuilder sb = new StringBuilder();
             sb.append(SQLBuilder.getSqlQueryById(SQLBuilder.SQL_MODULE_NEWS,"getAllNews"));
-            if(DataUtils.isNullOrEmpty(request.getTitle())){
+            if(!DataUtils.isNullOrEmpty(request.getTitle())){
                 sb.append(" AND n.title LIKE :p_title");
             }
-            if(DataUtils.isNullOrEmpty(request.getCategoryName())){
+            if(!DataUtils.isNullOrEmpty(request.getName())){
                 sb.append(" AND nc.name LIKE :p_categoryName");
             }
+
             SQLQuery query = session.createSQLQuery(sb.toString());
-            query.setParameter("p_title","%"+request.getTitle()+"%");
-            query.setParameter("p_categoryName","%"+request.getCategoryName()+"%");
+            if (!DataUtils.isNullOrEmpty(request.getTitle())) {
+                query.setParameter("p_title", "%" +
+                        request.getTitle().trim()
+                                .replace("\\", "\\\\")
+                                .replaceAll("%", "\\%")
+                                .replaceAll("_", "\\_")
+                        + "%");
+            }
+            if (!DataUtils.isNullOrEmpty(request.getName())) {
+                query.setParameter("p_categoryName", "%" +
+                        request.getTitle().trim()
+                                .replace("\\", "\\\\")
+                                .replaceAll("%", "\\%")
+                                .replaceAll("_", "\\_")
+                        + "%");
+            }
             query.addScalar("id",new LongType());
             query.addScalar("content",new StringType());
             query.addScalar("posted",new StringType());
@@ -54,7 +69,7 @@ public class dNewsImpl implements NewsDao {
             query.addScalar("time_post",new DateType());
             query.addScalar("title",new StringType());
             query.addScalar("username",new StringType());
-            query.addScalar("categoryName",new StringType());
+            query.addScalar("name",new StringType());
 
             query.setResultTransformer(Transformers.aliasToBean(SearchNewsRequest.class));
             int count = 0;

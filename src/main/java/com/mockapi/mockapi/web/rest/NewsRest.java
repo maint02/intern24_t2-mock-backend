@@ -24,7 +24,7 @@ public class NewsRest {
     @Autowired
     private ISNewsService isNewsService;
 
-    @GetMapping("/all")
+    @PostMapping("/allByParams")
     public ResponseEntity<GetListDataResponseDTO<NewsResponse>> getAll(@RequestBody SearchNewsRequest request){
         GetListDataResponseDTO<NewsResponse> resp  = isNewsService.getAllNews(request);
         if(resp == null){
@@ -35,8 +35,8 @@ public class NewsRest {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<GetSingleDataResponseDTO<NewsDTO>> add(@Valid @RequestBody NewsRequest newsDTO){
-        GetSingleDataResponseDTO<NewsDTO> resp = isNewsService.add(newsDTO);
+    public ResponseEntity<GetSingleDataResponseDTO<NewsDTO>> add(@Valid @RequestBody NewsRequest request){
+        GetSingleDataResponseDTO<NewsDTO> resp = isNewsService.add(request);
         if(resp == null){
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }

@@ -1,5 +1,6 @@
 package com.mockapi.mockapi.service.impl;
 
+import com.mockapi.mockapi.model.Employee;
 import com.mockapi.mockapi.model.News;
 import com.mockapi.mockapi.repository.EmployeeRepo;
 import com.mockapi.mockapi.repository.NewsCategoryRepo;
@@ -16,10 +17,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -91,8 +94,12 @@ public class SNewsImpl implements ISNewsService {
     @Override
     public GetSingleDataResponseDTO<NewsDTO> add(NewsRequest newsRequest) {
         GetSingleDataResponseDTO<NewsDTO> result = new GetSingleDataResponseDTO<>();
+       // Employee employee = (Employee) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+       // System.out.println("employee pricical-- "+ employee.getId()+"---"+employee.getUsername());
         try {
             News news = modelMapper.map(newsRequest,News.class);
+            news.setTime_post(new Date());
+           // news.getEmployee().getId();
             news = newsRepo.save(news);
             result.setResult(modelMapper.map(news,NewsDTO.class));
             log.info("response ----" +result.getMessage());
