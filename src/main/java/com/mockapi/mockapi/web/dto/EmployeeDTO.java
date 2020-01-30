@@ -58,7 +58,7 @@ public class EmployeeDTO extends BaseDTO {
     private int graduationYear;
 
 
-    private String image;
+    private byte[] image;
 
 
     private boolean is_actived;

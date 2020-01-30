@@ -155,21 +155,6 @@ public class sEmployeeImpl implements ISEmployeeService {
     }
 
     @Override
-    public GetSingleDataResponseDTO<EmployeeDTO> deleteById(Long id) {
-        log.info("----request delete ID----");
-        GetSingleDataResponseDTO<EmployeeDTO> result = new GetSingleDataResponseDTO<>();
-        try {
-            if (findById(id) != null) {
-                employeeRepo.deleteById(id);
-            }
-            log.info("---Response of delete Employee : " + result.getMessage());
-        } catch (Exception ex) {
-            log.error(ex.getMessage(), ex);
-        }
-        return result;
-    }
-
-    @Override
     public GetListDataResponseDTO<EmployeeDTO> getAll() {
         log.info("--- request getAll Employee----");
         GetListDataResponseDTO<EmployeeDTO> result = new GetListDataResponseDTO<>();
@@ -312,7 +297,7 @@ public class sEmployeeImpl implements ISEmployeeService {
         log.info("--request to getAllByParmas is -----");
         GetListDataResponseDTO<SearchRequestResponse> result = new GetListDataResponseDTO<>();
         Page<SearchRequestResponse> rawDatas = employeeDAO.getListByParams(request);
-        System.out.println("content!!!!!!"+rawDatas.getContent() +"---- size"+rawDatas.getSize());
+        //System.out.println("content!!!!!!"+rawDatas.getContent() +"---- size"+rawDatas.getSize());
         result.setResult(rawDatas.getContent(),rawDatas.getTotalElements(),rawDatas.getTotalPages());
         log.info("--response to get list employee by params: " + result.getMessage());
         return result;

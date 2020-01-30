@@ -19,7 +19,6 @@ public interface ISEmployeeService {
 
     GetSingleDataResponseDTO<EmployeeDTO> findById(Long id);
 
-    GetSingleDataResponseDTO<EmployeeDTO> deleteById(Long id);
 
     GetListDataResponseDTO<EmployeeDTO> getAll();
 

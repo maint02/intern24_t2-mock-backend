@@ -18,9 +18,15 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.zip.DataFormatException;
+import java.util.zip.Deflater;
+import java.util.zip.Inflater;
 
 @RestController
 @CrossOrigin("*")
@@ -35,8 +41,9 @@ public class EmployeeRest {
 
     @PostMapping("/add")
     @PreAuthorize("hasAnyRole('MANAGER')")
-    public ResponseEntity<GetSingleDataResponseDTO<EmployeeDTO>> addEmp(@Valid @RequestBody EmployeeRequest employeeRequest){
-        log.info("--request to add new Employee: {} ");
+    public ResponseEntity<GetSingleDataResponseDTO<EmployeeDTO>> addEmp(@Valid @RequestBody EmployeeRequest employeeRequest, @RequestParam("imageFile")MultipartFile file)throws IOException{
+            log.info("--request to add new Employee: {} ");
+        employeeRequest.setImage(compressBytes(file.getBytes()));
         GetSingleDataResponseDTO<EmployeeDTO> emp  = employeeService.add(employeeRequest);
         if (emp == null){
             log.error("Faile to add employee :{}",emp);
@@ -81,14 +88,6 @@ public class EmployeeRest {
         return new ResponseEntity<>(resp,HttpStatus.OK);
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<GetSingleDataResponseDTO<EmployeeDTO>> deleteById(@PathVariable("id")Long id){
-        log.info("--- Rest request to delete employee: " + id);
-        GetSingleDataResponseDTO<EmployeeDTO> result = employeeService.deleteById(id);
-        log.info("Rest response of update employee {}: " + result.getMessage());
-        return new ResponseEntity<>(result, HttpStatus.OK);
-    }
-
     @GetMapping("/allrp")
     public ResponseEntity<GetListDataResponseDTO<EmployeeDTO>> getAll(){
         log.info("--request to GET All Employee: {} ");
@@ -123,4 +122,42 @@ public class EmployeeRest {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    // compress the image bytes before storing it in the database
+    public static byte[] compressBytes(byte[] data) {
+        Deflater deflater = new Deflater();
+        deflater.setInput(data);
+        deflater.finish();
+
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream(data.length);
+        byte[] buffer = new byte[1024];
+        while (!deflater.finished()) {
+            int count = deflater.deflate(buffer);
+            outputStream.write(buffer, 0, count);
+        }
+        try {
+            outputStream.close();
+        } catch (IOException e) {
+        }
+        System.out.println("Compressed Image Byte Size - " + outputStream.toByteArray().length);
+
+        return outputStream.toByteArray();
+    }
+
+    // uncompress the image bytes before returning it to the angular application
+    public static byte[] decompressBytes(byte[] data) {
+        Inflater inflater = new Inflater();
+        inflater.setInput(data);
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream(data.length);
+        byte[] buffer = new byte[1024];
+        try {
+            while (!inflater.finished()) {
+                int count = inflater.inflate(buffer);
+                outputStream.write(buffer, 0, count);
+            }
+            outputStream.close();
+        } catch (IOException ioe) {
+        } catch (DataFormatException e) {
+        }
+        return outputStream.toByteArray();
+    }
 }

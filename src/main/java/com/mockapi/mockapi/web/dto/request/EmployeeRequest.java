@@ -47,7 +47,7 @@ public class EmployeeRequest {
     private int graduationYear;
 
 
-    private String image;
+    private byte[] image;
 
 
     private boolean isActive;
