@@ -1,6 +1,5 @@
 package com.mockapi.mockapi.service.impl;
 
-import com.mockapi.mockapi.config.jwt.UserPrincipal;
 import com.mockapi.mockapi.config.jwt1.TokenUtils;
 import com.mockapi.mockapi.exception.ApiRequestException;
 import com.mockapi.mockapi.model.Employee;
@@ -114,7 +113,7 @@ public class UserCustomDetail implements UserDetailsService {
         String username = tokenUtils.getUsernameFromToken(token);
         Employee emp = (Employee) loadUserByUsername(username);
 
-        if (tokenUtils.canTokenBeRefreshed(token, emp.getLast_access())) {
+        if (tokenUtils.canTokenBeRefreshed(token, emp.getLastAccess())) {
             String refreshedToken = tokenUtils.refreshToken(token);
             int expiresIn = tokenUtils.getExpiredIn();
             return new EmployeeToken(refreshedToken, expiresIn);

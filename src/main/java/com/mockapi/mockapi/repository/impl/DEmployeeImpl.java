@@ -28,8 +28,8 @@ import javax.persistence.TypedQuery;
 import java.util.List;
 
 @Repository
-public class dEmployeeImpl implements EmployeeDAO {
-    private static final Logger log = LoggerFactory.getLogger(dEmployeeImpl.class);
+public class DEmployeeImpl implements EmployeeDAO {
+    private static final Logger log = LoggerFactory.getLogger(DEmployeeImpl.class);
     @PersistenceContext
     private EntityManager em;
 
@@ -79,24 +79,18 @@ public class dEmployeeImpl implements EmployeeDAO {
             }
             query.addScalar("id", new LongType());
             query.addScalar("username", new StringType());
-            query.addScalar("Email", new StringType());
-            query.addScalar("created_date", new DateType());
+            query.addScalar("email", new StringType());
+            query.addScalar("createdDate", new DateType());
             query.addScalar("fullName", new StringType());
-            query.addScalar("is_actived", StandardBasicTypes.BOOLEAN);
-            query.addScalar("last_access",new DateType());
-            query.addScalar("phone_number", new IntegerType());
+            query.addScalar("isActived", StandardBasicTypes.BOOLEAN);
+            query.addScalar("lastAccess",new DateType());
+            query.addScalar("phoneNumber", new IntegerType());
             query.addScalar("userType", new StringType());
-            query.addScalar("role_name", new StringType());
-            query.addScalar("department_name", new StringType());
-            query.addScalar("leader_id", new LongType());
+            query.addScalar("roleName", new StringType());
+            query.addScalar("departmentName", new StringType());
+            query.addScalar("leaderId", new LongType());
 
             query.setResultTransformer(Transformers.aliasToBean(SearchRequestResponse.class));
-            int count = 0;
-            List<SearchRequestResponse> dtos = query.list();
-            if (dtos.size() > 0) {
-                count = query.list().size();
-            }
-
             if (request.getPage() != null && request.getPageSize() != null) {
                 Pageable pageable = PageBuilder.buildPageable(request);
                 if (pageable != null) {
@@ -105,7 +99,7 @@ public class dEmployeeImpl implements EmployeeDAO {
                 }
                 List<SearchRequestResponse> data = query.list();
 
-                Page<SearchRequestResponse> dataPage = new PageImpl<>(data, pageable, count);
+                Page<SearchRequestResponse> dataPage = new PageImpl<>(data, pageable, count());
                 return dataPage;
             }
             transaction.commit();
@@ -204,5 +198,22 @@ public class dEmployeeImpl implements EmployeeDAO {
         } catch (Exception ex) {
             log.error(ex.getMessage(), ex);
         }
+    }
+    private int count(){
+        SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
+        Session session = sessionFactory.openSession();
+        int count = 0;
+        try {
+            String sql = SQLBuilder.getSqlQueryById(SQLBuilder.SQL_MODULE_EMPLOYEES,"countEmployee");
+            SQLQuery query = session.createSQLQuery(sql);
+            count = query.list().size();
+            return count;
+        }catch (Exception ex){
+            log.error(ex.getMessage(),ex);
+        }finally {
+            session.close();
+        }
+
+        return count;
     }
 }

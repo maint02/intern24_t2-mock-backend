@@ -1,4 +1,4 @@
-select n.id id, n.content content,n.posted posted, n.summary summary,n.thumbnail,n.time_post,n.title,
+select n.id id, n.content content,n.posted posted, n.summary summary,n.thumbnail,n.time_post timePost,n.title,
 e.username,
 nc.name
 from news n

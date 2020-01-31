@@ -45,14 +45,14 @@ public class Issues implements Serializable {
     private String name;
 
     @Column(name = "START_DATE")
-    private Date start_Date;
+    private Date startDate;
 
 
     @Column(name = "DUE_DATE")
-    private Date due_Date;
+    private Date dueDate;
     // đã hoàn thành
     @Column(name = "DONE_PERSENT")
-    private int done_Persent;
+    private int donePersent;
 
     // sự ưu tiên
     @Column(name = "PRIORITY")

@@ -41,7 +41,7 @@ public class EmployeeRest {
 
     @PostMapping("/add")
     @PreAuthorize("hasAnyRole('MANAGER')")
-    public ResponseEntity<GetSingleDataResponseDTO<EmployeeDTO>> addEmp(@Valid @RequestBody EmployeeRequest employeeRequest, @RequestParam("imageFile")MultipartFile file)throws IOException{
+    public ResponseEntity<GetSingleDataResponseDTO<EmployeeDTO>> addEmp(@Valid @RequestBody EmployeeRequest employeeRequest, @RequestParam("image")MultipartFile file)throws IOException{
             log.info("--request to add new Employee: {} ");
         employeeRequest.setImage(compressBytes(file.getBytes()));
         GetSingleDataResponseDTO<EmployeeDTO> emp  = employeeService.add(employeeRequest);

@@ -20,7 +20,7 @@ public class SearchNewsRequest extends BaseDTO {
 
     private String thumbnail;
 
-    private Date time_post;
+    private Date timePost;
 
     @NotBlank
     private String title;

@@ -77,7 +77,7 @@ public class SNewsImpl implements ISNewsService {
                 news.setPosted(newsDTO.getContent());
                 news.setSummary(newsDTO.getSummary());
                 news.setThumbnail(newsDTO.getThumbnail());
-                news.setTime_post(newsDTO.getTime_post());
+                news.setTimePost(newsDTO.getTimePost());
                 news.setTitle(newsDTO.getTitle());
                 newsRepo.save(news);
                 result.setResult(modelMapper.map(news,NewsDTO.class));
@@ -98,7 +98,7 @@ public class SNewsImpl implements ISNewsService {
        System.out.println("employee pricical-- "+ employee.getId()+"---"+employee.getUsername());
         try {
             News news = modelMapper.map(newsRequest,News.class);
-            news.setTime_post(new Date());
+            news.setTimePost(new Date());
             news.getEmployee().getId();
             news = newsRepo.save(news);
             result.setResult(modelMapper.map(news,NewsDTO.class));

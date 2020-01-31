@@ -26,7 +26,7 @@ public class NewsDTO extends BaseDTO{
     private String posted;
 
     @NotNull
-    private Date time_post;
+    private Date timePost;
 
     @NotNull
     private String summary;

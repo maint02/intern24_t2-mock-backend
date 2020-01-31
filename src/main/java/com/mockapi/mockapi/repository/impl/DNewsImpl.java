@@ -7,7 +7,6 @@ import com.mockapi.mockapi.util.PageBuilder;
 import com.mockapi.mockapi.util.SQLBuilder;
 import com.mockapi.mockapi.web.dto.request.SearchNewsRequest;
 import com.mockapi.mockapi.web.dto.response.resp.NewsResponse;
-import com.mockapi.mockapi.web.dto.response.resp.SearchRequestResponse;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -26,8 +25,8 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public class dNewsImpl implements NewsDao {
-    private Logger log = LoggerFactory.getLogger(dNewsImpl.class);
+public class DNewsImpl implements NewsDao {
+    private Logger log = LoggerFactory.getLogger(DNewsImpl.class);
 
     @Override
     public Page<NewsResponse> getAll(SearchNewsRequest request) {
@@ -66,17 +65,12 @@ public class dNewsImpl implements NewsDao {
             query.addScalar("posted",new StringType());
             query.addScalar("summary",new StringType());
             query.addScalar("thumbnail",new StringType());
-            query.addScalar("time_post",new DateType());
+            query.addScalar("timePost",new DateType());
             query.addScalar("title",new StringType());
             query.addScalar("username",new StringType());
             query.addScalar("name",new StringType());
 
             query.setResultTransformer(Transformers.aliasToBean(SearchNewsRequest.class));
-            int count = 0;
-            List<NewsResponse> dtos = query.list();
-            if (dtos.size() > 0) {
-                count = query.list().size();
-            }
 
             if (request.getPage() != null && request.getPageSize() != null) {
                 Pageable pageable = PageBuilder.buildPageable(request);
@@ -86,7 +80,7 @@ public class dNewsImpl implements NewsDao {
                 }
                 List<NewsResponse> data = query.list();
 
-                Page<NewsResponse> dataPage = new PageImpl<>(data, pageable, count);
+                Page<NewsResponse> dataPage = new PageImpl<>(data, pageable, count());
                 return dataPage;
             }
             tx.commit();
@@ -99,5 +93,22 @@ public class dNewsImpl implements NewsDao {
             session.close();
         }
         return null;
+    }
+    private int count(){
+        SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
+        Session session = sessionFactory.openSession();
+        int count = 0;
+        try {
+            String sql = SQLBuilder.getSqlQueryById(SQLBuilder.SQL_MODULE_NEWS,"countNews");
+            SQLQuery query = session.createSQLQuery(sql);
+            count = query.list().size();
+            return count;
+        }catch (Exception ex){
+            log.error(ex.getMessage(),ex);
+        }finally {
+            session.close();
+        }
+
+        return count;
     }
 }

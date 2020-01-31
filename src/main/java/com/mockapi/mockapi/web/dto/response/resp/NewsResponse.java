@@ -16,7 +16,7 @@ public class NewsResponse {
 
     private String thumbnail;
 
-    private Date time_post;
+    private Date timePost;
 
     private String title;
 

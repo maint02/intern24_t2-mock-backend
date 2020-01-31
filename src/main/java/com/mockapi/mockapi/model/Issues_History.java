@@ -35,7 +35,7 @@ public class Issues_History implements Serializable {
     private Employee employee;
 
     @Column(name = "UPDATE_DATE")
-    private Date update_date;
+    private Date updateDate;
 
     @Column(name = "COMMENTS")
     private String comment;

@@ -24,7 +24,7 @@ public class Team {
     private long id;
 
     @Column(name = "LEADER_ID")
-    private int leader_id;
+    private int leaderId;
 
     @OneToMany(mappedBy = "team",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     //@JsonManagedReference(value = "teamp-team")

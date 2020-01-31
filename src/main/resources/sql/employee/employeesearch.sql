@@ -1,8 +1,8 @@
-select e.id id,e.username username,e.email email,e.created_date created_date,e.fullname fullName,e.is_actived is_actived,
-       e.last_access last_access,e.phone_number phone_number,e.user_type userType,
-       r.role_name role_name,
-       d.department_name department_name,
-       t.leader_id leader_id
+select e.id id,e.username username,e.email email,e.created_date createdDate,e.fullname fullName,e.is_actived isActived,
+       e.last_access lastAccess,e.phone_number phoneNumber,e.user_type userType,
+       r.role_name roleName,
+       d.department_name departmentName,
+       t.leader_id leaderId
 
 from employee e
          inner join employee_role er on(er.employee_id = e.id)

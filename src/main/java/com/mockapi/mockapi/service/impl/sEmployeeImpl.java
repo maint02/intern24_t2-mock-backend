@@ -78,8 +78,7 @@ public class sEmployeeImpl implements ISEmployeeService {
     @Autowired
     private EmployeeIssueRepo employeeIssueRepo;
 
-    @Autowired
-    private SMailSenderImpl sMailSender;
+
     public boolean isRequestDataValid(LoginRequest loginRequest) {
         return loginRequest != null &&
                 loginRequest.getUsername() != null &&
@@ -100,11 +99,10 @@ public class sEmployeeImpl implements ISEmployeeService {
 
             } else {
                 String pw = RandomPassword.pwGenerate();
-                emp.set_actived(false);
+                emp.setActived(false);
                 emp.setPassword(passwordEncoder.encode(pw));
                 emp.getRoles().add(roleRepo.findByName(Constants.ROLE_PUBLIC));
-                emp.set_actived(true);
-                emp.setCreated_date(new Date());
+                emp.setCreatedDate(new Date());
                 emp = employeeRepo.save(emp);
                 SimpleMailMessage message = new SimpleMailMessage();
                 message.setTo(employeeRequest.getEmail());
@@ -166,9 +164,6 @@ public class sEmployeeImpl implements ISEmployeeService {
         try {
             data.stream().map(res -> {
                 EmployeeDTO em = modelMapper.map(res, EmployeeDTO.class);
-//                em.setNews(news);
-//                em.setAbsents(absents);
-//                em.setIssues_histories(issues_histories);
                 dto.add(em);
                 result.setValue(dto);
                 return result;
@@ -203,8 +198,8 @@ public class sEmployeeImpl implements ISEmployeeService {
         long timeDifference = timeProvider.timeDifferenceInMinutes(timeProvider.now(), confirmationToken.getDatetimeCreated());
 
         if (timeDifference < 30) {
-            emp.set_actived(true);
-            emp.setLast_access(new Date());
+            emp.setActived(true);
+            emp.setLastAccess(new Date());
             employeeRepo.save(emp);
             confirmationToken.setUsed(true);
             confirmationTokenRepo.save(confirmationToken);
@@ -310,25 +305,25 @@ public class sEmployeeImpl implements ISEmployeeService {
         try {
             Employee employee  = employeeRepo.findById(dto.getId()).get();
             if(employee != null){
-                employee.set_actived(dto.is_actived());
+                employee.setActived(dto.isActived());
                 employee.setBirthday(dto.getBirthday());
                 employee.setAddress(dto.getAddress());
                 employee.setEducation(dto.getEducation());
-                employee.setUserType(dto.getUser_type());
+                employee.setUserType(dto.getUserType());
                 employee.setAbsents(dto.getAbsents());
                 employee.setAbsents1(dto.getAbsents());
-                employee.setCreated_date(dto.getCreated_date());
+                employee.setCreatedDate(dto.getCreatedDate());
                 employee.setDepartment(dto.getDepartment());
                 employee.setEmail(dto.getEmail());
                 employee.setSkypeAcc(dto.getSkypeAcc());
-                employee.setPhone_number(dto.getPhone_number());
+                employee.setPhoneNumber(dto.getPhoneNumber());
                 employee.setPosition(dto.getPosition());
                 employee.setImage(dto.getImage());
                 employee.setNews(dto.getNews());
                 employee.setFbLink(dto.getFbLink());
                 employee.setGraduationYear(dto.getGraduationYear());
                 employee.setFaculty(dto.getFaculty());
-                employee.setFullName(dto.getFullname());
+                employee.setFullName(dto.getFullName());
                 employee.setUniversity(dto.getUniversity());
                 employeeRepo.save(employee);
                 result.setResult(modelMapper.map(employee,EmployeeDTO.class));

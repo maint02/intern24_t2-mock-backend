@@ -26,7 +26,7 @@ public class TeamProject implements Serializable {
     private Date start_date;
 
     @Column(name = "HANDOVER_DATE")
-    private Date handover_date;
+    private Date handoverDate;
 
     @ManyToOne
     @MapsId(value = "idTeam")
