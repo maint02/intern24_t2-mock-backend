@@ -113,7 +113,7 @@ public class UserCustomDetail implements UserDetailsService {
         String username = tokenUtils.getUsernameFromToken(token);
         Employee emp = (Employee) loadUserByUsername(username);
 
-        if (tokenUtils.canTokenBeRefreshed(token, emp.getLast_access())) {
+        if (tokenUtils.canTokenBeRefreshed(token, emp.getLastAccess())) {
             String refreshedToken = tokenUtils.refreshToken(token);
             int expiresIn = tokenUtils.getExpiredIn();
             return new EmployeeToken(refreshedToken, expiresIn);

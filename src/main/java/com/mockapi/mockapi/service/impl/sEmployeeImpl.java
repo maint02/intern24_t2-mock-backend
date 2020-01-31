@@ -28,6 +28,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -77,8 +78,7 @@ public class sEmployeeImpl implements ISEmployeeService {
     @Autowired
     private EmployeeIssueRepo employeeIssueRepo;
 
-    @Autowired
-    private SMailSenderImpl sMailSender;
+
     public boolean isRequestDataValid(LoginRequest loginRequest) {
         return loginRequest != null &&
                 loginRequest.getUsername() != null &&
@@ -99,11 +99,10 @@ public class sEmployeeImpl implements ISEmployeeService {
 
             } else {
                 String pw = RandomPassword.pwGenerate();
-
-                emp.set_actived(false);
+                emp.setActived(false);
                 emp.setPassword(passwordEncoder.encode(pw));
                 emp.getRoles().add(roleRepo.findByName(Constants.ROLE_PUBLIC));
-                emp.set_actived(true);
+                emp.setCreatedDate(new Date());
                 emp = employeeRepo.save(emp);
                 SimpleMailMessage message = new SimpleMailMessage();
                 message.setTo(employeeRequest.getEmail());
@@ -154,21 +153,6 @@ public class sEmployeeImpl implements ISEmployeeService {
     }
 
     @Override
-    public GetSingleDataResponseDTO<EmployeeDTO> deleteById(Long id) {
-        log.info("----request delete ID----");
-        GetSingleDataResponseDTO<EmployeeDTO> result = new GetSingleDataResponseDTO<>();
-        try {
-            if (findById(id) != null) {
-                employeeRepo.deleteById(id);
-            }
-            log.info("---Response of delete Employee : " + result.getMessage());
-        } catch (Exception ex) {
-            log.error(ex.getMessage(), ex);
-        }
-        return result;
-    }
-
-    @Override
     public GetListDataResponseDTO<EmployeeDTO> getAll() {
         log.info("--- request getAll Employee----");
         GetListDataResponseDTO<EmployeeDTO> result = new GetListDataResponseDTO<>();
@@ -180,9 +164,6 @@ public class sEmployeeImpl implements ISEmployeeService {
         try {
             data.stream().map(res -> {
                 EmployeeDTO em = modelMapper.map(res, EmployeeDTO.class);
-//                em.setNews(news);
-//                em.setAbsents(absents);
-//                em.setIssues_histories(issues_histories);
                 dto.add(em);
                 result.setValue(dto);
                 return result;
@@ -217,7 +198,8 @@ public class sEmployeeImpl implements ISEmployeeService {
         long timeDifference = timeProvider.timeDifferenceInMinutes(timeProvider.now(), confirmationToken.getDatetimeCreated());
 
         if (timeDifference < 30) {
-            emp.getId();
+            emp.setActived(true);
+            emp.setLastAccess(new Date());
             employeeRepo.save(emp);
             confirmationToken.setUsed(true);
             confirmationTokenRepo.save(confirmationToken);
@@ -250,20 +232,6 @@ public class sEmployeeImpl implements ISEmployeeService {
                if(findIH(emp.getId())!=null){
                    issueHistoryRepo.delete(findIH(emp.getId()));
                }
-//                emp.getEmployee_issues().forEach(ei -> {
-//                    Employee_Issue employeeIssue = employeeIssueRepo.findByEmployeeId(emp.getId());
-//                    employeeIssueRepo.delete(employeeIssue);
-//                });
-//                emp.getIssues_histories().forEach(ih -> {
-//                    Issues_History issuesHistory = issueHistoryRepo.findByUpdatePerson(emp.getId());
-//                    issueHistoryRepo.updateIH();
-//                });
-//                emp.getNews().forEach(ne -> {
-//                    News news = newsRepo.findByEmployeeId(emp.getId());
-//                    newsRepo.delete(news);
-//                });
-//                    ConfirmationToken token  = confirmationTokenRepo.findByEmployeeId(emp.getId());
-//                    confirmationTokenRepo.delete(token);
                 employeeDAO.deleteRoleEmp(emp.getId());
             }
             employeeRepo.delete(emp);
@@ -324,7 +292,7 @@ public class sEmployeeImpl implements ISEmployeeService {
         log.info("--request to getAllByParmas is -----");
         GetListDataResponseDTO<SearchRequestResponse> result = new GetListDataResponseDTO<>();
         Page<SearchRequestResponse> rawDatas = employeeDAO.getListByParams(request);
-        System.out.println("content!!!!!!"+rawDatas.getContent() +"---- size"+rawDatas.getSize());
+        //System.out.println("content!!!!!!"+rawDatas.getContent() +"---- size"+rawDatas.getSize());
         result.setResult(rawDatas.getContent(),rawDatas.getTotalElements(),rawDatas.getTotalPages());
         log.info("--response to get list employee by params: " + result.getMessage());
         return result;
@@ -337,25 +305,25 @@ public class sEmployeeImpl implements ISEmployeeService {
         try {
             Employee employee  = employeeRepo.findById(dto.getId()).get();
             if(employee != null){
-                employee.set_actived(dto.is_actived());
+                employee.setActived(dto.isActived());
                 employee.setBirthday(dto.getBirthday());
                 employee.setAddress(dto.getAddress());
                 employee.setEducation(dto.getEducation());
-                employee.setUserType(dto.getUser_type());
+                employee.setUserType(dto.getUserType());
                 employee.setAbsents(dto.getAbsents());
                 employee.setAbsents1(dto.getAbsents());
-                employee.setCreated_date(dto.getCreated_date());
+                employee.setCreatedDate(dto.getCreatedDate());
                 employee.setDepartment(dto.getDepartment());
                 employee.setEmail(dto.getEmail());
                 employee.setSkypeAcc(dto.getSkypeAcc());
-                employee.setPhone_number(dto.getPhone_number());
+                employee.setPhoneNumber(dto.getPhoneNumber());
                 employee.setPosition(dto.getPosition());
                 employee.setImage(dto.getImage());
                 employee.setNews(dto.getNews());
                 employee.setFbLink(dto.getFbLink());
                 employee.setGraduationYear(dto.getGraduationYear());
                 employee.setFaculty(dto.getFaculty());
-                employee.setFullName(dto.getFullname());
+                employee.setFullName(dto.getFullName());
                 employee.setUniversity(dto.getUniversity());
                 employeeRepo.save(employee);
                 result.setResult(modelMapper.map(employee,EmployeeDTO.class));

@@ -34,7 +34,7 @@ public class Employee_Issue implements Serializable {
 
     // thời gian dự tính
     @Column(name = "SPENT_TIME")
-    private float spent_time;
+    private float spentTime;
 
     // ghi chú
     @Column(name = "NOTE")

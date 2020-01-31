@@ -23,47 +23,47 @@ public class SearchRequestResponse{
 
     private String username;
 
-    private String Email;
+    private String email;
 
-    private Date created_date;
+    private Date createdDate;
 
     private String fullName;
 
-    private boolean is_actived;
+    private boolean isActived;
 
-    private boolean is_leader;
+    private boolean isLeader;
 
-    private boolean is_manager;
+    private boolean isManager;
 
-    private Date last_access;
+    private Date lastAccess;
 
-    private int phone_number;
+    private int phoneNumber;
 
     private String userType;
 
-    private String role_name;
+    private String roleName;
 
-    private String department_name;
+    private String departmentName;
 
-    private Long leader_id;
+    private Long leaderId;
 
     @Override
     public String toString() {
         return "SearchRequestResponse{" +
                 "id=" + id +
                 ", username='" + username + '\'' +
-                ", Email='" + Email + '\'' +
-                ", created_date=" + created_date +
+                ", email='" + email + '\'' +
+                ", createdDate=" + createdDate +
                 ", fullName='" + fullName + '\'' +
-                ", is_actived=" + is_actived +
-                ", is_leader=" + is_leader +
-                ", is_manager=" + is_manager +
-                ", last_access=" + last_access +
-                ", phone_number=" + phone_number +
+                ", isActived=" + isActived +
+                ", isLeader=" + isLeader +
+                ", isManager=" + isManager +
+                ", lastAccess=" + lastAccess +
+                ", phoneNumber=" + phoneNumber +
                 ", userType='" + userType + '\'' +
-                ", role_name='" + role_name + '\'' +
-                ", department_name='" + department_name + '\'' +
-                ", leader_id=" + leader_id +
+                ", roleName='" + roleName + '\'' +
+                ", departmentName='" + departmentName + '\'' +
+                ", leaderId=" + leaderId +
                 '}';
     }
 }

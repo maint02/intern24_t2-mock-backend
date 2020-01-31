@@ -4,8 +4,10 @@ package com.mockapi.mockapi.web.rest;
 import com.mockapi.mockapi.service.ISNewsService;
 import com.mockapi.mockapi.web.dto.NewsDTO;
 import com.mockapi.mockapi.web.dto.request.NewsRequest;
+import com.mockapi.mockapi.web.dto.request.SearchNewsRequest;
 import com.mockapi.mockapi.web.dto.response.GetListDataResponseDTO;
 import com.mockapi.mockapi.web.dto.response.GetSingleDataResponseDTO;
+import com.mockapi.mockapi.web.dto.response.resp.NewsResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -22,9 +24,9 @@ public class NewsRest {
     @Autowired
     private ISNewsService isNewsService;
 
-    @GetMapping("/all")
-    public ResponseEntity<GetListDataResponseDTO<NewsDTO>> getAll(){
-        GetListDataResponseDTO<NewsDTO> resp  = isNewsService.getAllNews();
+    @PostMapping("/allByParams")
+    public ResponseEntity<GetListDataResponseDTO<NewsResponse>> getAll(@RequestBody SearchNewsRequest request){
+        GetListDataResponseDTO<NewsResponse> resp  = isNewsService.getAllNews(request);
         if(resp == null){
             log.error("can't get all News");
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
@@ -33,8 +35,8 @@ public class NewsRest {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<GetSingleDataResponseDTO<NewsDTO>> add(@Valid @RequestBody NewsRequest newsDTO){
-        GetSingleDataResponseDTO<NewsDTO> resp = isNewsService.add(newsDTO);
+    public ResponseEntity<GetSingleDataResponseDTO<NewsDTO>> add(@Valid @RequestBody NewsRequest request){
+        GetSingleDataResponseDTO<NewsDTO> resp = isNewsService.add(request);
         if(resp == null){
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }

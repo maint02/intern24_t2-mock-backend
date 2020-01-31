@@ -1,35 +1,25 @@
 package com.mockapi.mockapi.web.dto.request;
 
-import com.mockapi.mockapi.model.NewsCategory;
-import com.mockapi.mockapi.web.dto.BaseDTO;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 @Getter
 @Setter
-public class NewsRequest extends BaseDTO {
+public class NewsRequest {
     private long id;
 
-    @NotNull
-    private String thumbnail;
-
-    @NotNull
-    private String title;
-
-    @NotNull
-    private String posted;
-
-    @NotNull
-    private Date time_post;
-
-    @NotNull
-    private String summary;
-
-    @NotNull
+    @NotBlank
     private String content;
-
-    private NewsCategory newsCategory;
+    @NotBlank
+    private String posted;
+    @NotBlank
+    private String summary;
+    @NotBlank
+    private String thumbnail;
+    @NotBlank
+    private String title;
 }

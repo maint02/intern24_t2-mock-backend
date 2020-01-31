@@ -29,23 +29,23 @@ public class Employee implements UserDetails,Serializable{
     @Column(name = "PASSWORD")
     private String password;
 
-    @Column(name = "IMAGE_URL")
-    private String image;
+    @Column(name = "IMAGE_URL",length = 1000)
+    private byte[] image;
 
     @Column(name = "LAST_ACCESS")
-    private Date last_access;
+    private Date lastAccess;
 
     @Column(name = "FULLNAME")
     private String fullName;
 
     @Column(name = "CREATED_DATE")
-    private Date created_date;
+    private Date createdDate;
 
     @Column(name = "EMAIL")
-    private String Email;
+    private String email;
 
     @Column(name = "PHONE_NUMBER")
-    private int phone_number;
+    private int phoneNumber;
 
     @Column(name = "SKYPE_ACCOUNT")
     private String skypeAcc;
@@ -121,13 +121,13 @@ public class Employee implements UserDetails,Serializable{
     private String userType;
 
     @Column(name = "IS_ACTIVED")
-    private boolean is_actived;
+    private boolean isActived;
 
     @Column(name = "IS_LEADER")
-    private boolean is_leader;
+    private boolean isLeader;
 
     @Column(name = "IS_MANAGER")
-    private boolean is_manager;
+    private boolean isManager;
 
 
     @Column(name = "BIRTHDAY")
@@ -155,7 +155,7 @@ public class Employee implements UserDetails,Serializable{
 
     @Override
     public boolean isEnabled() {
-        return this.is_actived;
+        return this.isActived;
     }
     @Override
     public boolean equals(Object o) {

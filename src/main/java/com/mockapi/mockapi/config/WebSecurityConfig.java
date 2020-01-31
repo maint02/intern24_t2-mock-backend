@@ -1,12 +1,10 @@
 package com.mockapi.mockapi.config;
 
-//import com.mockapi.mockapi.config.jwt.JWTConfigurer;
 
 import com.mockapi.mockapi.config.firewall.RequestRejectedExceptionFilter;
 import com.mockapi.mockapi.config.jwt1.RestAuthenticationEntryPoint;
 import com.mockapi.mockapi.config.jwt1.TokenAuthenticationFilter;
 import com.mockapi.mockapi.config.jwt1.TokenUtils;
-import com.mockapi.mockapi.repository.EmployeeRepo;
 import com.mockapi.mockapi.service.impl.UserCustomDetail;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;

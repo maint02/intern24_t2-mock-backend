@@ -1,11 +1,15 @@
-package com.mockapi.mockapi.web.dto.response.resp;
+package com.mockapi.mockapi.web.dto.request;
 
 import com.mockapi.mockapi.web.dto.BaseDTO;
+import lombok.Getter;
+import lombok.Setter;
 
+import javax.validation.constraints.NotBlank;
 import java.util.Date;
 
-public class NewsResponse {
-
+@Getter
+@Setter
+public class SearchNewsRequest extends BaseDTO {
     private long id;
 
     private String content;
@@ -18,9 +22,11 @@ public class NewsResponse {
 
     private Date timePost;
 
+    @NotBlank
     private String title;
 
     private String username;
 
+    @NotBlank
     private String name;
 }

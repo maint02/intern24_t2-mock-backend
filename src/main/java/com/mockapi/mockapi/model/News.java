@@ -35,7 +35,7 @@ public class News implements Serializable {
     private String posted;
 
     @Column(name = "TIME_POST")
-    private Date time_post;
+    private Date timePost;
 
     @Column(name = "SUMMARY")
     private String summary;
