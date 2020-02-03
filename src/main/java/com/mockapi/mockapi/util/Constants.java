@@ -31,7 +31,6 @@ public class Constants {
 
     public static final String ROLE_PUBLIC = "PUBLIC";
     public static final String ROLE_MEMBER = "MEMBER";
-
     public static final String ROLE_TEAMLEAD = "TEAMLEAD";
     public static final String ROLE_MANAGER = "MANAGER";
     public static final String ROLE_HR= "HR";

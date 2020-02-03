@@ -2,10 +2,7 @@ package com.mockapi.mockapi.web.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.mockapi.mockapi.model.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
@@ -16,8 +13,9 @@ import java.util.stream.Collectors;
 
 @NoArgsConstructor
 @AllArgsConstructor
+@Getter
+@Setter
 @ToString
-@Data
 public class EmployeeDTO extends BaseDTO {
     private Long id;
 
@@ -58,7 +56,7 @@ public class EmployeeDTO extends BaseDTO {
     private int graduationYear;
 
 
-    private byte[] image;
+    private String image;
 
 
     private boolean isActived;
@@ -96,6 +94,7 @@ public class EmployeeDTO extends BaseDTO {
     private Department department;
 
     private Position position;
+ 
     public EmployeeDTO(Employee emp){
         this.id = emp.getId();
         this.address = emp.getAddress();

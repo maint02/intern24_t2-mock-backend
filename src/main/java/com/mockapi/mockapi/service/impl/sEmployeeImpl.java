@@ -96,7 +96,7 @@ public class sEmployeeImpl implements ISEmployeeService {
             Employee emp = modelMapper.map(employeeRequest, Employee.class);
             if (findByUsername(employeeRequest.getUsername())) {
                 log.info(" username already have!!!");
-
+                result.setMessage("username already have!!!");
             } else {
                 String pw = RandomPassword.pwGenerate();
                 emp.setActived(false);
@@ -292,7 +292,6 @@ public class sEmployeeImpl implements ISEmployeeService {
         log.info("--request to getAllByParmas is -----");
         GetListDataResponseDTO<SearchRequestResponse> result = new GetListDataResponseDTO<>();
         Page<SearchRequestResponse> rawDatas = employeeDAO.getListByParams(request);
-        //System.out.println("content!!!!!!"+rawDatas.getContent() +"---- size"+rawDatas.getSize());
         result.setResult(rawDatas.getContent(),rawDatas.getTotalElements(),rawDatas.getTotalPages());
         log.info("--response to get list employee by params: " + result.getMessage());
         return result;
@@ -312,12 +311,10 @@ public class sEmployeeImpl implements ISEmployeeService {
                 employee.setUserType(dto.getUserType());
                 employee.setAbsents(dto.getAbsents());
                 employee.setAbsents1(dto.getAbsents());
-                employee.setCreatedDate(dto.getCreatedDate());
                 employee.setDepartment(dto.getDepartment());
                 employee.setEmail(dto.getEmail());
                 employee.setSkypeAcc(dto.getSkypeAcc());
                 employee.setPhoneNumber(dto.getPhoneNumber());
-                employee.setPosition(dto.getPosition());
                 employee.setImage(dto.getImage());
                 employee.setNews(dto.getNews());
                 employee.setFbLink(dto.getFbLink());
@@ -325,6 +322,7 @@ public class sEmployeeImpl implements ISEmployeeService {
                 employee.setFaculty(dto.getFaculty());
                 employee.setFullName(dto.getFullName());
                 employee.setUniversity(dto.getUniversity());
+                employee.getRoles().add(roleRepo.findByName(dto.getAuthorities().get(1)));
                 employeeRepo.save(employee);
                 result.setResult(modelMapper.map(employee,EmployeeDTO.class));
             }
@@ -335,6 +333,7 @@ public class sEmployeeImpl implements ISEmployeeService {
         }
         return result;
     }
+     
 
 
 }

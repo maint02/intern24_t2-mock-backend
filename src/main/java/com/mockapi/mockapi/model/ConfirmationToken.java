@@ -2,13 +2,14 @@ package com.mockapi.mockapi.model;
 
 
 
+import lombok.ToString;
+
 import javax.persistence.*;
 import java.util.Date;
 import java.util.Objects;
 import java.util.UUID;
-/*
- Save token
- */
+
+@ToString
 @Entity(name = "CONFIRMATION_TOKEN")
 public class ConfirmationToken {
     @Id

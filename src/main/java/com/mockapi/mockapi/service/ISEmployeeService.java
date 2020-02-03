@@ -7,11 +7,9 @@ import com.mockapi.mockapi.web.dto.request.LoginRequest;
 import com.mockapi.mockapi.web.dto.request.SearchEmployeeRequest;
 import com.mockapi.mockapi.web.dto.response.GetListDataResponseDTO;
 import com.mockapi.mockapi.web.dto.response.GetSingleDataResponseDTO;
-import com.mockapi.mockapi.web.dto.response.auth.LoginResponse;
 import com.mockapi.mockapi.web.dto.response.resp.SearchRequestResponse;
 
 public interface ISEmployeeService {
-//    LoginResponse generateToken(LoginRequest loginRequest);
 
     GetSingleDataResponseDTO<EmployeeDTO> add(EmployeeRequest employeeRequest);
 
@@ -34,4 +32,5 @@ public interface ISEmployeeService {
     GetListDataResponseDTO<SearchRequestResponse> AllByParams(SearchEmployeeRequest request);
 
     GetSingleDataResponseDTO<EmployeeDTO> update(EmployeeDTO dto);
+
 }

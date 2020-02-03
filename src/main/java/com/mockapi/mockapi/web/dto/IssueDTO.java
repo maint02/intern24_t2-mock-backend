@@ -33,9 +33,9 @@ public class IssueDTO extends BaseDTO {
 
     private String type;
 
-    private List<Employee_Issue> employee_issues;
+    private List<Employee_IssueDTO> employee_issues;
 
-    private List<Issues_History> issuesHistories;
+    private List<Issues_HistoryDTO> issuesHistories;
 
     private Long statusId;
 

@@ -39,19 +39,19 @@ public class EmployeeRest {
     @Autowired
     private EmployeeRepo employeeRepo;
 
-    @PostMapping("/add")
-    @PreAuthorize("hasAnyRole('MANAGER')")
-    public ResponseEntity<GetSingleDataResponseDTO<EmployeeDTO>> addEmp(@Valid @RequestBody EmployeeRequest employeeRequest, @RequestParam("image")MultipartFile file)throws IOException{
+    @PostMapping(value = "/add",consumes =  "application/json")
+    public ResponseEntity<GetSingleDataResponseDTO<EmployeeDTO>> addEmp(@Valid @RequestBody EmployeeRequest employeeRequest)throws IOException{
+//        , @RequestParam("image")MultipartFile file
             log.info("--request to add new Employee: {} ");
-        employeeRequest.setImage(compressBytes(file.getBytes()));
-        GetSingleDataResponseDTO<EmployeeDTO> emp  = employeeService.add(employeeRequest);
-        if (emp == null){
-            log.error("Faile to add employee :{}",emp);
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }
-        log.info("---Rest response of add new employee: {} " + emp.getMessage());
+                //employeeRequest.setImage(compressBytes(file.getBytes()));
+                GetSingleDataResponseDTO<EmployeeDTO> emp  = employeeService.add(employeeRequest);
+                if (emp == null){
+                    log.error("Faile to add employee :{}",emp);
+                    return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+                }
+                log.info("---Rest response of add new employee: {} " + emp.getMessage());
+                return new ResponseEntity<>(emp, HttpStatus.OK);
 
-        return new ResponseEntity<>(emp, HttpStatus.OK);
     }
     @PostMapping(value = "/getAll",consumes = MediaType.APPLICATION_JSON_VALUE,produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<GetListDataResponseDTO<SearchRequestResponse>> getAll(@RequestBody SearchEmployeeRequest request){

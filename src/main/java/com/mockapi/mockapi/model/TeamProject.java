@@ -11,6 +11,7 @@ import java.util.Date;
 @NoArgsConstructor
 @Getter
 @Setter
+@ToString
 @Entity(name = "TEAM_PROJECT")
 //@Table
 public class TeamProject implements Serializable {

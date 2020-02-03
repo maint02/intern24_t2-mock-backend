@@ -10,7 +10,7 @@ import java.util.Date;
 
 @Getter
 @Setter
-public class EmployeeRequest {
+public class EmployeeRegisterRequest {
     private Long id;
 
     @NotNull(message = "Username can't be null")
@@ -47,7 +47,8 @@ public class EmployeeRequest {
     private int graduationYear;
 
 
-    private String image;
+    private byte[] image;
+
 
     @JsonFormat(pattern = "yyyy-MM-dd")
     private Date lastAccess;
