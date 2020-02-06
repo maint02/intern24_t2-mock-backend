@@ -8,15 +8,14 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @Getter
 @Setter
 @ToString
-public class EmployeeDTO extends BaseDTO {
+public class EmployeeDTO {
     private Long id;
 
 
@@ -36,7 +35,6 @@ public class EmployeeDTO extends BaseDTO {
     @NotNull(message = "address can't be null")
     private String address;
 
-    @NotNull(message = "createDate can't be null")
     @JsonFormat(pattern = "yyyy-MM-dd")
     private Date createdDate;
 

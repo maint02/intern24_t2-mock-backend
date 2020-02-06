@@ -52,13 +52,23 @@ public class NewsRest {
         return new ResponseEntity<>(resp,HttpStatus.OK);
     }
 
-    @GetMapping("/all/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<GetSingleDataResponseDTO<NewsDTO>> delete(@PathVariable("id")Long id){
         GetSingleDataResponseDTO<NewsDTO> resp  = isNewsService.delete(id);
         if(resp == null){
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
         log.info("deleted! news ");
+        return new ResponseEntity<>(resp,HttpStatus.OK);
+
+    }
+    @GetMapping("/all/{id}")
+    public ResponseEntity<GetSingleDataResponseDTO<NewsDTO>> getById(@PathVariable("id")Long id){
+        GetSingleDataResponseDTO<NewsDTO> resp  = isNewsService.getById(id);
+        if(resp == null){
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        log.info("Get news by id ");
         return new ResponseEntity<>(resp,HttpStatus.OK);
 
     }

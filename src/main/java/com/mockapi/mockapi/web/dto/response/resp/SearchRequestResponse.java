@@ -1,21 +1,12 @@
 package com.mockapi.mockapi.web.dto.response.resp;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.mockapi.mockapi.model.Department;
-import com.mockapi.mockapi.model.Position;
-import com.mockapi.mockapi.model.Role;
-import com.mockapi.mockapi.model.Team;
-import com.mockapi.mockapi.web.dto.response.BaseResponseDTO;
-import lombok.AllArgsConstructor;
+
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.Date;
-import java.util.List;
 
-@NoArgsConstructor
-@AllArgsConstructor
+
 @Getter
 @Setter
 public class SearchRequestResponse{
@@ -30,10 +21,6 @@ public class SearchRequestResponse{
     private String fullName;
 
     private boolean isActived;
-
-    private boolean isLeader;
-
-    private boolean isManager;
 
     private Date lastAccess;
 
@@ -56,8 +43,6 @@ public class SearchRequestResponse{
                 ", createdDate=" + createdDate +
                 ", fullName='" + fullName + '\'' +
                 ", isActived=" + isActived +
-                ", isLeader=" + isLeader +
-                ", isManager=" + isManager +
                 ", lastAccess=" + lastAccess +
                 ", phoneNumber=" + phoneNumber +
                 ", userType='" + userType + '\'' +

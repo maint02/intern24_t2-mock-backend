@@ -1,7 +1,6 @@
 package com.mockapi.mockapi.web.dto;
 
 
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 

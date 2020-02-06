@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.security.Principal;
 
 @RestController
 @RequestMapping("/auth")
@@ -42,7 +43,10 @@ public class AuthRest {
     }
 
     @PostMapping("/change-password")
-    public ResponseEntity changePassword(@Valid @RequestBody PasswordChangerRequest passwordChanger) {
+    public ResponseEntity changePassword(@Valid @RequestBody PasswordChangerRequest passwordChanger,
+                                         Principal principal
+                                         ) {
+        System.out.println("Principal controller: " + principal.getName());
         userCustomDetail.ChangePassword(passwordChanger.getOldPassword(), passwordChanger.getNewPassword());
         return ResponseEntity.ok().build();
     }

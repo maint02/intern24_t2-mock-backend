@@ -53,7 +53,7 @@ public class EmployeeRest {
                 return new ResponseEntity<>(emp, HttpStatus.OK);
 
     }
-    @PostMapping(value = "/getAll",consumes = MediaType.APPLICATION_JSON_VALUE,produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/getAll")
     public ResponseEntity<GetListDataResponseDTO<SearchRequestResponse>> getAll(@RequestBody SearchEmployeeRequest request){
         log.info("---Rest request getAll page--");
         GetListDataResponseDTO<SearchRequestResponse> data = employeeService.All(request);
@@ -64,8 +64,8 @@ public class EmployeeRest {
         log.info("---Rest Response getAll Employee----");
         return new ResponseEntity<>(data,HttpStatus.OK);
     }
-
-    @PostMapping(value = "/getAll-by-params",consumes = MediaType.APPLICATION_JSON_VALUE,produces = MediaType.APPLICATION_JSON_VALUE)
+//    @PreAuthorize("hasAnyRole('HR','MANAGER')")
+    @PostMapping(value = "/getAll-by-params")
     public ResponseEntity<GetListDataResponseDTO<SearchRequestResponse>> getAllByParams(@RequestBody SearchEmployeeRequest request){
         log.info("---Rest request getAll by params--");
         GetListDataResponseDTO<SearchRequestResponse> data = employeeService.AllByParams(request);
@@ -117,7 +117,7 @@ public class EmployeeRest {
     }
 
     @GetMapping("/public/verify-account/{token}")
-    public ResponseEntity<?> verifyAcc(@PathVariable("token") String token){
+    public ResponseEntity<?> verifyAcc(@PathVariable  String token){
         employeeService.activateAccount(token);
         return new ResponseEntity<>(HttpStatus.OK);
     }

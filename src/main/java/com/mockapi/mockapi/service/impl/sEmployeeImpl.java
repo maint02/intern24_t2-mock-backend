@@ -16,6 +16,7 @@ import com.mockapi.mockapi.web.dto.response.GetListDataResponseDTO;
 import com.mockapi.mockapi.web.dto.response.GetSingleDataResponseDTO;
 import com.mockapi.mockapi.web.dto.response.resp.SearchRequestResponse;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -109,7 +110,7 @@ public class sEmployeeImpl implements ISEmployeeService {
                 message.setSubject("Verified account & Password sender!");
                 ConfirmationToken token = new ConfirmationToken(emp);
                 confirmationTokenRepo.save(token);
-                message.setText("Password: "+pw +"\n Go to this page to activate your account http://localhost:8888/api/employee/public/verify-account/" + token.getToken());
+                message.setText("Password: "+pw +"\n Go to this page to activate your account http://localhost:4200/#/verify-account?token=" + token.getToken());
                 javaMailSender.send(message);
                 result.setResult(modelMapper.map(emp, EmployeeDTO.class));
             }
@@ -143,7 +144,15 @@ public class sEmployeeImpl implements ISEmployeeService {
         GetSingleDataResponseDTO<EmployeeDTO> result = new GetSingleDataResponseDTO<>();
         try {
             Employee emp = employeeRepo.getOne(id);
-            result.setResult(modelMapper.map(emp, EmployeeDTO.class));
+            TypeMap<Employee,EmployeeDTO> toDto = modelMapper.getTypeMap(Employee.class,EmployeeDTO.class);
+            // ignoreDepartment
+            if(toDto  == null){
+                toDto = modelMapper.createTypeMap(Employee.class,EmployeeDTO.class);
+            }
+            toDto.addMappings(x-> x.skip(EmployeeDTO:: setDepartment));
+            toDto.addMappings(x -> x.skip(EmployeeDTO::setPosition));
+            EmployeeDTO dto = toDto.map(emp);
+            result.setResult(dto);
         } catch (Exception ex) {
             log.error(ex.getMessage(), ex);
             result.setResult(null);
@@ -158,9 +167,6 @@ public class sEmployeeImpl implements ISEmployeeService {
         GetListDataResponseDTO<EmployeeDTO> result = new GetListDataResponseDTO<>();
         List<Employee> data = employeeRepo.findAll();
         List<EmployeeDTO> dto = new ArrayList<>();
-        List<News> news = newsRepo.findAll();
-        List<ABSENT> absents = absentRepo.findAll();
-        List<Issues_History> issues_histories = issueHistoryRepo.findAll();
         try {
             data.stream().map(res -> {
                 EmployeeDTO em = modelMapper.map(res, EmployeeDTO.class);
@@ -292,6 +298,7 @@ public class sEmployeeImpl implements ISEmployeeService {
         log.info("--request to getAllByParmas is -----");
         GetListDataResponseDTO<SearchRequestResponse> result = new GetListDataResponseDTO<>();
         Page<SearchRequestResponse> rawDatas = employeeDAO.getListByParams(request);
+        System.out.println("content : " +rawDatas.getContent()+"elel: "+rawDatas.getTotalElements());
         result.setResult(rawDatas.getContent(),rawDatas.getTotalElements(),rawDatas.getTotalPages());
         log.info("--response to get list employee by params: " + result.getMessage());
         return result;

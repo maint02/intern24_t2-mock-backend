@@ -1,17 +1,17 @@
 package com.mockapi.mockapi.web.rest;
 
-import com.mockapi.mockapi.model.NewsCategory;
 import com.mockapi.mockapi.service.ISNewsCategoryService;
+import com.mockapi.mockapi.web.dto.NewsCategoryDTO;
 import com.mockapi.mockapi.web.dto.response.GetListDataResponseDTO;
+import com.mockapi.mockapi.web.dto.response.GetSingleDataResponseDTO;
+import com.mockapi.mockapi.web.dto.response.resp.NewsCategoryResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/newCategory")
@@ -22,10 +22,21 @@ public class NewsCategoryRest {
     @Autowired
     private ISNewsCategoryService newsCategoryService;
 
-    @GetMapping(value = "/all",consumes = "application/json")
-    public ResponseEntity<GetListDataResponseDTO<NewsCategory>> getAll(){
+    @GetMapping(value = "/all")
+    public ResponseEntity<GetListDataResponseDTO<NewsCategoryResponse>> getAll(){
         log.info("-----start request to get all NewsCategory----");
-        GetListDataResponseDTO<NewsCategory> result = newsCategoryService.getAll();
+        GetListDataResponseDTO<NewsCategoryResponse> result = newsCategoryService.getAll();
+        if(result== null){
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        log.info("-----response to get all NewsCategory :{}");
+        return new ResponseEntity<>(result,HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/all/{id}")
+    public ResponseEntity<GetSingleDataResponseDTO<NewsCategoryDTO>> getById(@PathVariable("id")long id){
+        log.info("-----start request to get getById NewsCategory----");
+        GetSingleDataResponseDTO<NewsCategoryDTO> result = newsCategoryService.findById(id);
         if(result== null){
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }

@@ -10,7 +10,6 @@ import java.util.List;
 @NoArgsConstructor
 @Getter
 @Setter
-@ToString
 @Entity(name = "NEWS_CATEGORY")
 //@Table
 public class NewsCategory {
@@ -24,6 +23,6 @@ public class NewsCategory {
     private String name;
 
     @OneToMany(mappedBy = "newsCategory",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
-    @JsonManagedReference(value = "new-cate")
+    //@JsonManagedReference(value = "new-cate")
     private List<News> news;
 }

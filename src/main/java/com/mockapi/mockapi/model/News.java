@@ -12,7 +12,6 @@ import java.util.Date;
 @NoArgsConstructor
 @Getter
 @Setter
-@ToString
 @Entity(name = "NEWS")
 @Table
 public class News implements Serializable {
