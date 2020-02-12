@@ -1,4 +1,4 @@
-package com.mockapi.mockapi.web.dto.response;
+package com.mockapi.mockapi.web.dto.response.resp;
 
 import lombok.Data;
 

@@ -16,7 +16,7 @@ import java.util.Set;
 
 @Getter
 @Setter
-public class SearchEmployeeRequest extends BaseDTO implements Serializable {
+public class SearchEmployeeRequest extends BaseDTO{
     private Long id;
 
     private String username;
@@ -29,10 +29,6 @@ public class SearchEmployeeRequest extends BaseDTO implements Serializable {
 
     private boolean isActived;
 
-    private boolean isLeader;
-
-    private boolean isManager;
-
     private Date lastAccess;
 
     private int phoneNumber;
@@ -41,9 +37,7 @@ public class SearchEmployeeRequest extends BaseDTO implements Serializable {
 
     private String roleName;
 
-    private String departmentName;
 
-    private Long leaderId;
 
     @Override
     public String toString() {
@@ -54,14 +48,10 @@ public class SearchEmployeeRequest extends BaseDTO implements Serializable {
                 ", createdDate=" + createdDate +
                 ", fullName='" + fullName + '\'' +
                 ", isActived=" + isActived +
-                ", isLeader=" + isLeader +
-                ", isManager=" + isManager +
                 ", lastAccess=" + lastAccess +
                 ", phoneNumber=" + phoneNumber +
                 ", userType='" + userType + '\'' +
                 ", roleName='" + roleName + '\'' +
-                ", departmentName='" + departmentName + '\'' +
-                ", leaderId=" + leaderId +
                 '}';
     }
 }

@@ -19,8 +19,6 @@ public class Issues_History implements Serializable {
     @Id
     @SequenceGenerator(name = "ISSUESH_ID_SEQ",sequenceName = "AUTO_INCRE_SEQ_ISSUE_HIS",initialValue = 1,allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE,generator = "ISSUESH_ID_SEQ")
-
-
     @Column(name = "ID")
     private long id;
 

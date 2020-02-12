@@ -4,6 +4,7 @@ import com.mockapi.mockapi.model.Employee;
 import com.mockapi.mockapi.repository.EmployeeRepo;
 import com.mockapi.mockapi.service.ISEmployeeService;
 import com.mockapi.mockapi.web.dto.EmployeeDTO;
+import com.mockapi.mockapi.web.dto.request.EmployeeEditRequest;
 import com.mockapi.mockapi.web.dto.request.EmployeeRequest;
 import com.mockapi.mockapi.web.dto.request.SearchEmployeeRequest;
 import com.mockapi.mockapi.web.dto.response.GetListDataResponseDTO;
@@ -39,87 +40,105 @@ public class EmployeeRest {
     @Autowired
     private EmployeeRepo employeeRepo;
 
-    @PostMapping("/add")
-    @PreAuthorize("hasAnyRole('MANAGER')")
-    public ResponseEntity<GetSingleDataResponseDTO<EmployeeDTO>> addEmp(@Valid @RequestBody EmployeeRequest employeeRequest, @RequestParam("image")MultipartFile file)throws IOException{
-            log.info("--request to add new Employee: {} ");
-        employeeRequest.setImage(compressBytes(file.getBytes()));
-        GetSingleDataResponseDTO<EmployeeDTO> emp  = employeeService.add(employeeRequest);
-        if (emp == null){
-            log.error("Faile to add employee :{}",emp);
+    @PostMapping(value = "/add")
+    public ResponseEntity<GetSingleDataResponseDTO<EmployeeDTO>> addEmp(@Valid @RequestBody EmployeeRequest employeeRequest) throws IOException {
+//        , @RequestParam("image")MultipartFile file
+        log.info("--request to add new Employee: {} ");
+        //employeeRequest.setImage(compressBytes(file.getBytes()));
+        GetSingleDataResponseDTO<EmployeeDTO> emp = employeeService.add(employeeRequest);
+        if (emp == null) {
+            log.error("Faile to add employee :{}", emp);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
         log.info("---Rest response of add new employee: {} " + emp.getMessage());
-
         return new ResponseEntity<>(emp, HttpStatus.OK);
+
     }
-    @PostMapping(value = "/getAll",consumes = MediaType.APPLICATION_JSON_VALUE,produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<GetListDataResponseDTO<SearchRequestResponse>> getAll(@RequestBody SearchEmployeeRequest request){
+
+    @PostMapping(value = "/getAll")
+    public ResponseEntity<GetListDataResponseDTO<SearchRequestResponse>> getAll(@RequestBody SearchEmployeeRequest request) {
         log.info("---Rest request getAll page--");
         GetListDataResponseDTO<SearchRequestResponse> data = employeeService.All(request);
-        if(data ==null){
+        if (data == null) {
             log.error("can't get all employee ");
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
         log.info("---Rest Response getAll Employee----");
-        return new ResponseEntity<>(data,HttpStatus.OK);
+        return new ResponseEntity<>(data, HttpStatus.OK);
     }
 
-    @PostMapping(value = "/getAll-by-params",consumes = MediaType.APPLICATION_JSON_VALUE,produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<GetListDataResponseDTO<SearchRequestResponse>> getAllByParams(@RequestBody SearchEmployeeRequest request){
+    //    @PreAuthorize("hasRole('ROLE_HR')")
+    @PostMapping(value = "/getAll-by-params")
+    public ResponseEntity<GetListDataResponseDTO<SearchRequestResponse>> getAllByParams(@RequestBody SearchEmployeeRequest request) {
         log.info("---Rest request getAll by params--");
         GetListDataResponseDTO<SearchRequestResponse> data = employeeService.AllByParams(request);
-        if(data ==null){
+        if (data == null) {
             log.error("can't get all employee ");
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
         log.info("---Rest Response getAll Employee----");
-        return new ResponseEntity<>(data,HttpStatus.OK);
+        return new ResponseEntity<>(data, HttpStatus.OK);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<GetSingleDataResponseDTO<EmployeeDTO>> getById(@PathVariable("id")Long id){
-        log.info("fetch Employee with id : {}",id);
+    @GetMapping("/id/{id}")
+    public ResponseEntity<GetSingleDataResponseDTO<EmployeeDTO>> getById(@PathVariable("id") Long id) {
+        log.info("fetch Employee with id : {}", id);
         GetSingleDataResponseDTO<EmployeeDTO> resp = employeeService.findById(id);
-        if(resp == null){
-            log.error("can't find Employee with id :{}",id);
+        if (resp == null) {
+            log.error("can't find Employee with id :{}", id);
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
-        return new ResponseEntity<>(resp,HttpStatus.OK);
+        return new ResponseEntity<>(resp, HttpStatus.OK);
     }
 
     @GetMapping("/allrp")
-    public ResponseEntity<GetListDataResponseDTO<EmployeeDTO>> getAll(){
+    public ResponseEntity<GetListDataResponseDTO<EmployeeDTO>> getAll() {
         log.info("--request to GET All Employee: {} ");
-        GetListDataResponseDTO<EmployeeDTO> resp  = employeeService.getAll();
-        if(resp == null){
+        GetListDataResponseDTO<EmployeeDTO> resp = employeeService.getAll();
+        if (resp == null) {
             log.error("can't get all employee :{}");
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
         log.info("--- response to getAll Employee : {}");
-        return new ResponseEntity<>(resp,HttpStatus.OK);
+        return new ResponseEntity<>(resp, HttpStatus.OK);
     }
+
     @PutMapping(value = "/update")
-    @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<GetSingleDataResponseDTO<EmployeeDTO>> update(@Valid @RequestBody EmployeeDTO requestDTO) {
+//    @PreAuthorize("hasRole('USER')")
+    public ResponseEntity<GetSingleDataResponseDTO<EmployeeEditRequest>> update(@Valid @RequestBody EmployeeEditRequest requestDTO) {
         log.info("--- Rest request to update employee {}: " + requestDTO.toString());
-        GetSingleDataResponseDTO<EmployeeDTO> result = employeeService.update(requestDTO);
+        GetSingleDataResponseDTO<EmployeeEditRequest> result = employeeService.update(requestDTO);
         log.info("Rest response of update employee {}: " + result.getMessage());
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
+
+
+
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<GetSingleDataResponseDTO<EmployeeDTO>> delete(@PathVariable("id")Long id){
-        log.info("--request delete id ");
-        GetSingleDataResponseDTO<EmployeeDTO> result =  employeeService.delete(id);
-        log.info("--success delete id");
-        return new ResponseEntity<>(result,HttpStatus.OK);
+    public ResponseEntity<GetSingleDataResponseDTO<EmployeeDTO>> delete(@PathVariable("id") Long id) {
+        log.info("--request delete id {}");
+        GetSingleDataResponseDTO<EmployeeDTO> result = employeeService.delete(id);
+        log.info("--success delete id {}");
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     @GetMapping("/public/verify-account/{token}")
-    public ResponseEntity<?> verifyAcc(@PathVariable("token") String token){
+    public ResponseEntity<?> verifyAcc(@PathVariable String token) {
         employeeService.activateAccount(token);
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @GetMapping("/{username}")
+    public ResponseEntity<?> checkAccount(@PathVariable("username") String username) {
+        GetSingleDataResponseDTO<Employee> result = employeeService.checkUsername(username);
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    @GetMapping("/pw/{email}")
+    public ResponseEntity forgotPW(@PathVariable("email") String email) {
+        employeeService.forgotPW(email);
+        return ResponseEntity.ok().build();
     }
 
     // compress the image bytes before storing it in the database

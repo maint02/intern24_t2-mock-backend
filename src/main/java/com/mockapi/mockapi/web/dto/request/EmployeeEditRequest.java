@@ -1,21 +1,22 @@
 package com.mockapi.mockapi.web.dto.request;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.mockapi.mockapi.model.*;
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
+import java.util.List;
 
 @Getter
 @Setter
-public class EmployeeRequest {
-    private Long id;
+public class EmployeeEditRequest {
+    private long id;
 
-    @NotNull(message = "Username can't be null")
+
     private String username;
-
 
     @Email(message = "email can't be null")
     private String email;
@@ -49,6 +50,12 @@ public class EmployeeRequest {
 
     private String image;
 
+    private boolean isActived;
+
+    private boolean isLeader;
+
+    private boolean isManager;
+
     @JsonFormat(pattern = "yyyy-MM-dd")
     private Date lastAccess;
 
@@ -64,5 +71,18 @@ public class EmployeeRequest {
     @NotNull(message = "userType can't be null")
     private String userType;
 
+    private List<News> news;
+
+    private List<ABSENT> absents;
+
+    private List<Issues_History> issues_histories;
+
+    private List<String> authorities;
+
+    private EmployeeToken employeeToken;
+
+    private Department department;
+
+    private Position position;
 
 }

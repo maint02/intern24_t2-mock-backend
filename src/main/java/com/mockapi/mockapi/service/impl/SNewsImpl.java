@@ -50,9 +50,9 @@ public class SNewsImpl implements ISNewsService {
         log.info("--request News to getAllByParmas is -----");
         GetListDataResponseDTO<NewsResponse> result = new GetListDataResponseDTO<>();
         Page<NewsResponse> rawDatas = newsDao.getAll(request);
-        System.out.println("content!!!!!!"+rawDatas.getContent() +"---- size"+rawDatas.getSize());
-        result.setResult(rawDatas.getContent(),rawDatas.getTotalElements(),rawDatas.getTotalPages());
-        log.info("--response to get list employee by params: " + result.getMessage());
+        System.out.println("content!!!!!!" + rawDatas.getContent() + "---- size" + rawDatas.getSize());
+        result.setResult(rawDatas.getContent(), rawDatas.getTotalElements(), rawDatas.getTotalPages());
+        log.info("--response to get list News by params: " + result.getMessage());
         return result;
     }
 
@@ -60,10 +60,10 @@ public class SNewsImpl implements ISNewsService {
     public GetSingleDataResponseDTO<NewsDTO> delete(Long id) {
         GetSingleDataResponseDTO<NewsDTO> result = new GetSingleDataResponseDTO<>();
         News news = newsRepo.findById(id).get();
-        if(news != null){
+        if (news != null) {
             newsRepo.deleteById(id);
         }
-        result.setResult(modelMapper.map(news,NewsDTO.class));
+        result.setResult(modelMapper.map(news, NewsDTO.class));
         return result;
     }
 
@@ -72,7 +72,7 @@ public class SNewsImpl implements ISNewsService {
         GetSingleDataResponseDTO<NewsDTO> result = new GetSingleDataResponseDTO<>();
         try {
             News news = newsRepo.findById(newsDTO.getId()).get();
-            if(news !=null){
+            if (news != null) {
                 news.setContent(newsDTO.getContent());
                 news.setPosted(newsDTO.getContent());
                 news.setSummary(newsDTO.getSummary());
@@ -80,11 +80,11 @@ public class SNewsImpl implements ISNewsService {
                 news.setTimePost(newsDTO.getTimePost());
                 news.setTitle(newsDTO.getTitle());
                 newsRepo.save(news);
-                result.setResult(modelMapper.map(news,NewsDTO.class));
+                result.setResult(modelMapper.map(news, NewsDTO.class));
                 return result;
             }
-        }catch (Exception ex){
-            log.error(ex.getMessage(),ex);
+        } catch (Exception ex) {
+            log.error(ex.getMessage(), ex);
             result.setResult(null);
         }
 
@@ -94,18 +94,35 @@ public class SNewsImpl implements ISNewsService {
     @Override
     public GetSingleDataResponseDTO<NewsDTO> add(NewsRequest newsRequest) {
         GetSingleDataResponseDTO<NewsDTO> result = new GetSingleDataResponseDTO<>();
-       Employee employee = (Employee) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-       System.out.println("employee pricical-- "+ employee.getId()+"---"+employee.getUsername());
+        Employee employee = (Employee) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        System.out.println("employee pricical-- " + employee.getId() + "---" + employee.getUsername());
         try {
-            News news = modelMapper.map(newsRequest,News.class);
+            News news = modelMapper.map(newsRequest, News.class);
             news.setTimePost(new Date());
             news.getEmployee().getId();
             news = newsRepo.save(news);
-            result.setResult(modelMapper.map(news,NewsDTO.class));
-            log.info("response ----" +result.getMessage());
-            return  result;
-        }catch (Exception ex){
-            log.error(ex.getMessage(),ex);
+            result.setResult(modelMapper.map(news, NewsDTO.class));
+            log.info("response ----" + result.getMessage());
+            return result;
+        } catch (Exception ex) {
+            log.error(ex.getMessage(), ex);
+            result.setResult(null);
+        }
+        return result;
+    }
+
+    @Override
+    public GetSingleDataResponseDTO<NewsDTO> getById(Long id) {
+        GetSingleDataResponseDTO<NewsDTO> result = new GetSingleDataResponseDTO<>();
+        try {
+            News news = newsRepo.findById(id).get();
+            NewsDTO dto = modelMapper.map(news, NewsDTO.class);
+            dto.setUsername(news.getEmployee().getUsername());
+            dto.setNewsCategoryName(news.getNewsCategory().getName());
+            result.setResult(dto);
+            return result;
+        } catch (Exception ex) {
+            log.error(ex.getMessage(), ex);
             result.setResult(null);
         }
         return result;

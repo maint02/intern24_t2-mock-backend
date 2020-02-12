@@ -30,7 +30,7 @@ public class Employee implements UserDetails,Serializable{
     private String password;
 
     @Column(name = "IMAGE_URL",length = 1000)
-    private byte[] image;
+    private String image;
 
     @Column(name = "LAST_ACCESS")
     private Date lastAccess;

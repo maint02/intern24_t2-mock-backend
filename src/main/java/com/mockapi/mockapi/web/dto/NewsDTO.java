@@ -8,12 +8,9 @@ import lombok.extern.slf4j.Slf4j;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
 
-@AllArgsConstructor
-@NoArgsConstructor
 @Getter
 @Setter
-@Slf4j
-public class NewsDTO extends BaseDTO{
+public class NewsDTO{
     private long id;
 
     @NotNull
@@ -34,6 +31,8 @@ public class NewsDTO extends BaseDTO{
     @NotNull
     private String content;
 
+    private String username;
 
+    private String newsCategoryName;
 
 }
