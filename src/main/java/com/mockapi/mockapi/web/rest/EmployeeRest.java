@@ -118,6 +118,17 @@ public class EmployeeRest {
     public ResponseEntity<GetSingleDataResponseDTO<EmployeeDTO>> delete(@PathVariable("id") Long id) {
         log.info("--request delete id {}");
         GetSingleDataResponseDTO<EmployeeDTO> result = employeeService.delete(id);
+        if(result!=null){
+            try{
+                log.info("----re delete----");
+                Employee employee = employeeRepo.findById(id).get();
+                employeeRepo.delete(employee);
+                return ResponseEntity.ok().build();
+            }catch (Exception ex){
+                log.error(ex.getMessage(),ex);
+            }
+            log.info("----deleted!----");
+        }
         log.info("--success delete id {}");
         return new ResponseEntity<>(result, HttpStatus.OK);
     }

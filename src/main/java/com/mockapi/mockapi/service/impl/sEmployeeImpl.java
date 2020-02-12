@@ -197,6 +197,9 @@ public class sEmployeeImpl implements ISEmployeeService {
 //            toDto.addMappings(x -> x.skip(EmployeeDTO::setPosition));
 //            EmployeeDTO dto = toDto.map(emp);
             EmployeeDTO dto = modelMapper.map(emp, EmployeeDTO.class);
+             emp.getRoles().forEach(role -> {
+                 dto.setRole(role.getName());
+             });
 //            if (emp.getPosition().getName() != null) {
 //                dto.setPosition(emp.getPosition().getName());
 //            }
@@ -311,9 +314,12 @@ public class sEmployeeImpl implements ISEmployeeService {
                 if (findIH(emp.getId()) != null) {
                     issueHistoryRepo.delete(findIH(emp.getId()));
                 }
-                employeeDAO.deleteRoleEmp(emp.getId());
+                emp.getRoles().forEach(role -> {
+                    role.getEmployees().remove(emp);
+                });
+                employeeRepo.delete(emp);
             }
-            employeeRepo.delete(emp);
+
             result.setResult(modelMapper.map(emp, EmployeeDTO.class));
             log.info("-- Response of delete Employee " + result.getMessage());
         } catch (Exception ex) {

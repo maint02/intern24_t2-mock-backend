@@ -53,7 +53,7 @@ public class Employee implements UserDetails,Serializable{
     @Column(name = "FACEBOOK")
     private String fbLink;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER,cascade = {CascadeType.MERGE,CascadeType.PERSIST})
     @JoinTable(
             name = "EMPLOYEE_ROLE",
             joinColumns = @JoinColumn(name = "EMPLOYEE_ID",referencedColumnName = "ID",nullable = false),
