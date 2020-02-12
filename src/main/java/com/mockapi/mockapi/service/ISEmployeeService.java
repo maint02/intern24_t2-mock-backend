@@ -33,10 +33,6 @@ public interface ISEmployeeService {
 
     GetListDataResponseDTO<SearchRequestResponse> AllByParams(SearchEmployeeRequest request);
 
-<<<<<<< HEAD
-    GetSingleDataResponseDTO<EmployeeDTO> update(EmployeeDTO dto);
-
-=======
     GetSingleDataResponseDTO<EmployeeEditRequest> update(EmployeeEditRequest dto);
 
     GetSingleDataResponseDTO<EmployeeDTO> updateByAd(EmployeeDTO dto);
@@ -44,5 +40,4 @@ public interface ISEmployeeService {
     GetSingleDataResponseDTO<Employee> checkUsername(String username);
 
     void forgotPW(String email);
->>>>>>> tuan
 }

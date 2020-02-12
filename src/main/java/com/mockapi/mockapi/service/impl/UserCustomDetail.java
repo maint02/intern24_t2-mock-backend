@@ -55,11 +55,7 @@ public class UserCustomDetail implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Employee employee = employeeRepo.findByUsername(username);
         System.out.println("loadUserByUsername : " + employee.getUsername());
-<<<<<<< HEAD
-        if(employee == null){
-=======
         if (employee == null) {
->>>>>>> tuan
             throw new UsernameNotFoundException(username);
         }
         return employee;
@@ -72,7 +68,6 @@ public class UserCustomDetail implements UserDetailsService {
         return employee;
     }
 
-<<<<<<< HEAD
     public void ChangePassword(String oldPassword, String newPassword ){
         Authentication currentUser  =  SecurityContextHolder.getContext().getAuthentication();
         String username = currentUser.getName();
@@ -96,7 +91,6 @@ public class UserCustomDetail implements UserDetailsService {
         System.out.println("employee change password : " + employee.getUsername());
         employee.setPassword(passwordEncoder.encode(newPassword));
         employeeRepo.save(employee);
-=======
 //    public void ChangePassword(String oldPassword, String newPassword) {
 //        Authentication currentUser = SecurityContextHolder.getContext().getAuthentication();
 //        String username = currentUser.getName();
@@ -120,7 +114,7 @@ public class UserCustomDetail implements UserDetailsService {
 //        System.out.println("employee change password : " + employee.getUsername());
 //        employee.setPassword(passwordEncoder.encode(newPassword));
 //        employeeRepo.save(employee);
-//    }
+    }
 
     public void ChangePass(String oldPassword, String newPasswod, String username) {
         log.info("---start change password!");
@@ -131,7 +125,6 @@ public class UserCustomDetail implements UserDetailsService {
         }else{
             log.info("Password not match!");
         }
->>>>>>> tuan
     }
 
     public EmployeeDTO login(LoginRequest loginRequest) throws ApiRequestException {

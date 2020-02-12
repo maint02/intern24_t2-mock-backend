@@ -47,20 +47,12 @@ public class AuthRest {
         return new ResponseEntity<>(userCustomDetail.refreshAuthenticationToken(request), HttpStatus.OK);
     }
 
-<<<<<<< HEAD
-    @PostMapping("/change-password")
-    public ResponseEntity changePassword(@Valid @RequestBody PasswordChangerRequest passwordChanger,
-                                         Principal principal
-                                         ) {
-        System.out.println("Principal controller: " + principal.getName());
-        userCustomDetail.ChangePassword(passwordChanger.getOldPassword(), passwordChanger.getNewPassword());
-=======
+
     @PostMapping("/change-password/{username}")
     public ResponseEntity changePassword(@Valid @RequestBody PasswordChangerRequest passwordChanger,
                                          @PathVariable("username") String username
                                          ) {
         userCustomDetail.ChangePass(passwordChanger.getOldPassword(), passwordChanger.getNewPassword(),username);
->>>>>>> tuan
         return ResponseEntity.ok().build();
     }
 

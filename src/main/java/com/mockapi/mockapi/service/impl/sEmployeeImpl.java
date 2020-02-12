@@ -123,11 +123,8 @@ public class sEmployeeImpl implements ISEmployeeService {
                 message.setSubject("Verified account & Password sender!");
                 ConfirmationToken token = new ConfirmationToken(emp);
                 confirmationTokenRepo.save(token);
-<<<<<<< HEAD
-                message.setText("Password: "+pw +"\n Go to this page to activate your account http://localhost:4200/#/verify-account?token=" + token.getToken());
-=======
+
                 message.setText("Password: " + pw + "\n Go to this page to activate your account http://localhost:4200/#/verify-account?token=" + token.getToken());
->>>>>>> tuan
                 javaMailSender.send(message);
                 result.setResult(modelMapper.map(emp, EmployeeDTO.class));
             }
@@ -191,22 +188,12 @@ public class sEmployeeImpl implements ISEmployeeService {
         GetSingleDataResponseDTO<EmployeeDTO> result = new GetSingleDataResponseDTO<>();
         try {
             Employee emp = employeeRepo.getOne(id);
-<<<<<<< HEAD
-            TypeMap<Employee,EmployeeDTO> toDto = modelMapper.getTypeMap(Employee.class,EmployeeDTO.class);
-            // ignoreDepartment
-            if(toDto  == null){
-                toDto = modelMapper.createTypeMap(Employee.class,EmployeeDTO.class);
-            }
-            toDto.addMappings(x-> x.skip(EmployeeDTO:: setDepartment));
-            toDto.addMappings(x -> x.skip(EmployeeDTO::setPosition));
-            EmployeeDTO dto = toDto.map(emp);
-=======
-//            TypeMap<Employee, EmployeeDTO> toDto = modelMapper.getTypeMap(Employee.class, EmployeeDTO.class);
+//            TypeMap<Employee,EmployeeDTO> toDto = modelMapper.getTypeMap(Employee.class,EmployeeDTO.class);
 //            // ignoreDepartment
-//            if (toDto == null) {
-//                toDto = modelMapper.createTypeMap(Employee.class, EmployeeDTO.class);
+//            if(toDto  == null){
+//                toDto = modelMapper.createTypeMap(Employee.class,EmployeeDTO.class);
 //            }
-//            toDto.addMappings(x -> x.skip(EmployeeDTO::setDepartment));
+//            toDto.addMappings(x-> x.skip(EmployeeDTO:: setDepartment));
 //            toDto.addMappings(x -> x.skip(EmployeeDTO::setPosition));
 //            EmployeeDTO dto = toDto.map(emp);
             EmployeeDTO dto = modelMapper.map(emp, EmployeeDTO.class);
@@ -238,7 +225,6 @@ public class sEmployeeImpl implements ISEmployeeService {
 //                dto.setAbsents(absentDTOS);
 //            }
 
->>>>>>> tuan
             result.setResult(dto);
         } catch (Exception ex) {
             log.error(ex.getMessage(), ex);
@@ -392,13 +378,8 @@ public class sEmployeeImpl implements ISEmployeeService {
         log.info("--request to getAllByParmas is -----");
         GetListDataResponseDTO<SearchRequestResponse> result = new GetListDataResponseDTO<>();
         Page<SearchRequestResponse> rawDatas = employeeDAO.getListByParams(request);
-<<<<<<< HEAD
-        System.out.println("content : " +rawDatas.getContent()+"elel: "+rawDatas.getTotalElements());
-        result.setResult(rawDatas.getContent(),rawDatas.getTotalElements(),rawDatas.getTotalPages());
-=======
         System.out.println("content : " + rawDatas.getContent() + "elel: " + rawDatas.getTotalElements());
         result.setResult(rawDatas.getContent(), rawDatas.getTotalElements(), rawDatas.getTotalPages());
->>>>>>> tuan
         log.info("--response to get list employee by params: " + result.getMessage());
         return result;
     }
@@ -408,29 +389,6 @@ public class sEmployeeImpl implements ISEmployeeService {
         log.info("--request update employee service ----");
         GetSingleDataResponseDTO<EmployeeEditRequest> result = new GetSingleDataResponseDTO<>();
         try {
-<<<<<<< HEAD
-            Employee employee  = employeeRepo.findById(dto.getId()).get();
-            if(employee != null){
-                employee.setActived(dto.isActived());
-                employee.setBirthday(dto.getBirthday());
-                employee.setAddress(dto.getAddress());
-                employee.setEducation(dto.getEducation());
-                employee.setUserType(dto.getUserType());
-                employee.setAbsents(dto.getAbsents());
-                employee.setAbsents1(dto.getAbsents());
-                employee.setDepartment(dto.getDepartment());
-                employee.setEmail(dto.getEmail());
-                employee.setSkypeAcc(dto.getSkypeAcc());
-                employee.setPhoneNumber(dto.getPhoneNumber());
-                employee.setImage(dto.getImage());
-                employee.setNews(dto.getNews());
-                employee.setFbLink(dto.getFbLink());
-                employee.setGraduationYear(dto.getGraduationYear());
-                employee.setFaculty(dto.getFaculty());
-                employee.setFullName(dto.getFullName());
-                employee.setUniversity(dto.getUniversity());
-                employee.getRoles().add(roleRepo.findByName(dto.getAuthorities().get(1)));
-=======
             Employee employee = employeeRepo.findById(request.getId()).get();
             if (employee != null) {
                 employee.setBirthday(request.getBirthday());
@@ -451,7 +409,6 @@ public class sEmployeeImpl implements ISEmployeeService {
                 employee.setFullName(request.getFullName());
                 employee.setUniversity(request.getUniversity());
                 employee.setLastAccess(new Date());
->>>>>>> tuan
                 employeeRepo.save(employee);
                 result.setResult(modelMapper.map(employee, EmployeeEditRequest.class));
             }

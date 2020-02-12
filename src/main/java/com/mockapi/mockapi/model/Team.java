@@ -11,10 +11,6 @@ import java.util.List;
 @NoArgsConstructor
 @Getter
 @Setter
-<<<<<<< HEAD
-@ToString
-=======
->>>>>>> tuan
 @Entity(name = "TEAM")
 //@Table
 public class Team {

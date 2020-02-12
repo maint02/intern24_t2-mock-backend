@@ -54,11 +54,8 @@ public class EmployeeDTO {
     private int graduationYear;
 
 
-<<<<<<< HEAD
     private String image;
-=======
-//    private String image;
->>>>>>> tuan
+
 
 
     private boolean isActived;
@@ -98,12 +95,8 @@ public class EmployeeDTO {
 
     private String position;
 
-<<<<<<< HEAD
-    private Position position;
-=======
     private String team;
->>>>>>> tuan
- 
+
     public EmployeeDTO(Employee emp){
         this.id = emp.getId();
         this.address = emp.getAddress();

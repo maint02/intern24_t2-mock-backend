@@ -40,24 +40,6 @@ public class EmployeeRest {
     @Autowired
     private EmployeeRepo employeeRepo;
 
-<<<<<<< HEAD
-    @PostMapping(value = "/add",consumes =  "application/json")
-    public ResponseEntity<GetSingleDataResponseDTO<EmployeeDTO>> addEmp(@Valid @RequestBody EmployeeRequest employeeRequest)throws IOException{
-//        , @RequestParam("image")MultipartFile file
-            log.info("--request to add new Employee: {} ");
-                //employeeRequest.setImage(compressBytes(file.getBytes()));
-                GetSingleDataResponseDTO<EmployeeDTO> emp  = employeeService.add(employeeRequest);
-                if (emp == null){
-                    log.error("Faile to add employee :{}",emp);
-                    return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-                }
-                log.info("---Rest response of add new employee: {} " + emp.getMessage());
-                return new ResponseEntity<>(emp, HttpStatus.OK);
-
-    }
-    @PostMapping(value = "/getAll")
-    public ResponseEntity<GetListDataResponseDTO<SearchRequestResponse>> getAll(@RequestBody SearchEmployeeRequest request){
-=======
     @PostMapping(value = "/add")
     public ResponseEntity<GetSingleDataResponseDTO<EmployeeDTO>> addEmp(@Valid @RequestBody EmployeeRequest employeeRequest) throws IOException {
 //        , @RequestParam("image")MultipartFile file
@@ -75,7 +57,6 @@ public class EmployeeRest {
 
     @PostMapping(value = "/getAll")
     public ResponseEntity<GetListDataResponseDTO<SearchRequestResponse>> getAll(@RequestBody SearchEmployeeRequest request) {
->>>>>>> tuan
         log.info("---Rest request getAll page--");
         GetListDataResponseDTO<SearchRequestResponse> data = employeeService.All(request);
         if (data == null) {
@@ -85,16 +66,9 @@ public class EmployeeRest {
         log.info("---Rest Response getAll Employee----");
         return new ResponseEntity<>(data, HttpStatus.OK);
     }
-<<<<<<< HEAD
 //    @PreAuthorize("hasAnyRole('HR','MANAGER')")
     @PostMapping(value = "/getAll-by-params")
-    public ResponseEntity<GetListDataResponseDTO<SearchRequestResponse>> getAllByParams(@RequestBody SearchEmployeeRequest request){
-=======
-
-    //    @PreAuthorize("hasRole('ROLE_HR')")
-    @PostMapping(value = "/getAll-by-params")
     public ResponseEntity<GetListDataResponseDTO<SearchRequestResponse>> getAllByParams(@RequestBody SearchEmployeeRequest request) {
->>>>>>> tuan
         log.info("---Rest request getAll by params--");
         GetListDataResponseDTO<SearchRequestResponse> data = employeeService.AllByParams(request);
         if (data == null) {
@@ -149,11 +123,7 @@ public class EmployeeRest {
     }
 
     @GetMapping("/public/verify-account/{token}")
-<<<<<<< HEAD
-    public ResponseEntity<?> verifyAcc(@PathVariable  String token){
-=======
     public ResponseEntity<?> verifyAcc(@PathVariable String token) {
->>>>>>> tuan
         employeeService.activateAccount(token);
         return new ResponseEntity<>(HttpStatus.OK);
     }
