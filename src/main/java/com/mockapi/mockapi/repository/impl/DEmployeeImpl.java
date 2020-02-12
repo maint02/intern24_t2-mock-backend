@@ -87,8 +87,6 @@ public class DEmployeeImpl implements EmployeeDAO {
             query.addScalar("phoneNumber", new IntegerType());
             query.addScalar("userType", new StringType());
             query.addScalar("roleName", new StringType());
-            query.addScalar("departmentName", new StringType());
-            query.addScalar("leaderId", new LongType());
 
             query.setResultTransformer(Transformers.aliasToBean(SearchRequestResponse.class));
             int count = 0;
@@ -159,9 +157,10 @@ public class DEmployeeImpl implements EmployeeDAO {
         try {
             StringBuilder sb = new StringBuilder();
             sb.append(SQLBuilder.getSqlQueryById(SQLBuilder.SQL_MODULE_EMP_ROLE, "deleteRoleEmp"));
-            sb.append(" AND  e.id =:id");
+            sb.append(" AND  e.id =:p_id )");
             SQLQuery query = session.createSQLQuery(sb.toString());
-            query.addScalar("id", new LongType());
+            query.setParameter("p_id",id);
+            query.addScalar("p_id", new LongType());
             query.executeUpdate();
         } catch (Exception ex) {
             log.error(ex.getMessage(), ex);

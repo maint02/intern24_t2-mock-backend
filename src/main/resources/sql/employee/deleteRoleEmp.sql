@@ -3,4 +3,4 @@ WHERE EXISTS(
 SELECT
     1
 FROM employee e
-WHERE e.id = er.employee_id )
+WHERE e.id = er.employee_id

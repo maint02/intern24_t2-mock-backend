@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface NewsRepo extends JpaRepository<News,Long> {
-    @Query(nativeQuery = true,value = "select * from NEWS n where n.EMPLOYEE_ID=?1")
+    @Query(nativeQuery = true,value = "select * from NEWS n where n.EMPLOYEE_ID=?1 AND rownum = 1")
     News findByEmployeeId(Long id);
 
 

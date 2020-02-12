@@ -54,7 +54,11 @@ public class EmployeeDTO {
     private int graduationYear;
 
 
+<<<<<<< HEAD
     private String image;
+=======
+//    private String image;
+>>>>>>> tuan
 
 
     private boolean isActived;
@@ -67,7 +71,6 @@ public class EmployeeDTO {
     private Date lastAccess;
 
     @NotNull(message = "phoneNumber can't be null")
-
     private int phoneNumber;
 
     @NotNull(message = "skypeAcc can't be null")
@@ -79,48 +82,51 @@ public class EmployeeDTO {
     @NotNull(message = "userType can't be null")
     private String userType;
 
-    private List<News> news;
-
-    private List<ABSENT> absents;
-
-    private List<Issues_History> issues_histories;
+//    private List<NewsDTO> news;
+//
+//    private List<AbsentDTO> absents;
+//
+//    private List<Issues_HistoryDTO> issues_histories;
 
     private List<String> authorities;
 
     private EmployeeToken employeeToken;
 
-    private Department department;
+    private String role;
 
+    private String department;
+
+    private String position;
+
+<<<<<<< HEAD
     private Position position;
+=======
+    private String team;
+>>>>>>> tuan
  
     public EmployeeDTO(Employee emp){
         this.id = emp.getId();
         this.address = emp.getAddress();
         this.birthday = emp.getBirthday();
         this.createdDate = emp.getCreatedDate();
-        this.issues_histories = emp.getIssues_histories();
         this.education = emp.getEducation();
         this.email = emp.getEmail();
         this.faculty = emp.getFaculty();
         this.fbLink = emp.getFbLink();
         this.fullName = emp.getFullName();
         this.graduationYear = emp.getGraduationYear();
-        this.image = emp.getImage();
+//        this.image = emp.getImage();
         this.isActived = emp.isActived();
         this.isLeader = emp.isLeader();
         this.isManager = emp.isManager();
         this.lastAccess = emp.getLastAccess();
         this.password = emp.getPassword();
         this.phoneNumber = emp.getPhoneNumber();
-        this.news = emp.getNews();
         this.skypeAcc = emp.getSkypeAcc();
-        this.absents = emp.getAbsents();
         this.university = emp.getUniversity();
         this.userType = emp.getUserType();
         this.username = emp.getUsername();
         this.authorities = emp.getRoles().stream()
                 .map(auth -> ((Role) auth).getName()).collect(Collectors.toList());
-        this.department = emp.getDepartment();
-        this.position = emp.getPosition();
     }
 }

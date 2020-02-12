@@ -7,6 +7,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface EmployeeIssueRepo extends JpaRepository<Employee_Issue,Long> {
-    @Query(nativeQuery = true,value = "select * from EMPLOYEE_ISSUE E WHERE E.EMPLOYEE_ID =?1")
+    @Query(nativeQuery = true,value = "select * from EMPLOYEE_ISSUE E WHERE E.EMPLOYEE_ID =?1 AND rownum = 1")
     Employee_Issue findByEmployeeId(Long id);
 }

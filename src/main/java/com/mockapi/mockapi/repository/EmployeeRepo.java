@@ -15,4 +15,13 @@ public interface EmployeeRepo extends JpaRepository<Employee,Long> {
 
     @Query(nativeQuery = true,value = "SELECT e.USERNAME from EMPLOYEE e inner Join NEWS N on e.ID = N.EMPLOYEE_ID where N.EMPLOYEE_ID=?1")
     Employee findByUsernameByNewId(Long id);
+<<<<<<< HEAD
+=======
+
+    @Query(nativeQuery = true, value = "SELECT * FROM EMPLOYEE E WHERE E.EMAIL=?1 AND rownum = 1")
+    Employee findByEmail(String email);
+
+    @Query(nativeQuery = true, value = "SELECT * FROM EMPLOYEE E WHERE E.EMAIL=?1")
+    Employee checkEmail(String email);
+>>>>>>> tuan
 }

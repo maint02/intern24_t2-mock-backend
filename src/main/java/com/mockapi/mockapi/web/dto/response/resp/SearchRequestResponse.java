@@ -30,9 +30,7 @@ public class SearchRequestResponse{
 
     private String roleName;
 
-    private String departmentName;
 
-    private Long leaderId;
 
     @Override
     public String toString() {
@@ -47,8 +45,6 @@ public class SearchRequestResponse{
                 ", phoneNumber=" + phoneNumber +
                 ", userType='" + userType + '\'' +
                 ", roleName='" + roleName + '\'' +
-                ", departmentName='" + departmentName + '\'' +
-                ", leaderId=" + leaderId +
                 '}';
     }
 }

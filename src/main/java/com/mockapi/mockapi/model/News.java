@@ -21,22 +21,26 @@ public class News implements Serializable {
     @Column(name = "ID")
     private long id;
 
+
     @Column(name = "THUMBNAIL")
     private String thumbnail;
 
+    @Lob
     @Column(name = "TITLE")
     private String title;
 
-    // người đăng bài
+
     @Column(name = "POSTED")
     private String posted;
 
     @Column(name = "TIME_POST")
     private Date timePost;
 
+    @Lob
     @Column(name = "SUMMARY")
     private String summary;
 
+    @Lob
     @Column(name = "CONTENT")
     private String content;
 

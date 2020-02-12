@@ -6,11 +6,16 @@ import javax.persistence.Column;
 import javax.persistence.Embeddable;
 import java.io.Serializable;
 
+<<<<<<< HEAD
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
 @ToString
+=======
+@Getter
+@Setter
+>>>>>>> tuan
 @Embeddable
 public class EmployeeIHPK implements Serializable {
     @Column(name = "EMPLOYEE_ID")

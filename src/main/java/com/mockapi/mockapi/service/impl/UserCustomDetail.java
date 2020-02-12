@@ -55,18 +55,24 @@ public class UserCustomDetail implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Employee employee = employeeRepo.findByUsername(username);
         System.out.println("loadUserByUsername : " + employee.getUsername());
+<<<<<<< HEAD
         if(employee == null){
+=======
+        if (employee == null) {
+>>>>>>> tuan
             throw new UsernameNotFoundException(username);
         }
         return employee;
     }
+
     @Transactional
-    public UserDetails loadUserById(Long id){
+    public UserDetails loadUserById(Long id) {
         Employee employee = employeeRepo.findById(id).orElseThrow(() -> new UsernameNotFoundException(String.format("User not found with id: %s", id)));
 
         return employee;
     }
 
+<<<<<<< HEAD
     public void ChangePassword(String oldPassword, String newPassword ){
         Authentication currentUser  =  SecurityContextHolder.getContext().getAuthentication();
         String username = currentUser.getName();
@@ -90,9 +96,45 @@ public class UserCustomDetail implements UserDetailsService {
         System.out.println("employee change password : " + employee.getUsername());
         employee.setPassword(passwordEncoder.encode(newPassword));
         employeeRepo.save(employee);
+=======
+//    public void ChangePassword(String oldPassword, String newPassword) {
+//        Authentication currentUser = SecurityContextHolder.getContext().getAuthentication();
+//        String username = currentUser.getName();
+//        System.out.println("username :" + currentUser + " currentuser : " + currentUser.getName());
+//        if (currentUser != null) {
+//            log.debug("Re-authenticating user '" + username + "' for password change request.");
+//            try {
+//                authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, oldPassword));
+//            } catch (BadCredentialsException e) {
+//                log.error(e.getMessage(), e);
+//                throw new ApiRequestException("Credentials are not valid");
+//            }
+//        } else {
+//            log.debug("No authentication manager set. can't change Password!");
+//            return;
+//        }
+//
+//        log.debug("Changing password for user '" + username + "'");
+//
+//        Employee employee = (Employee) loadUserByUsername(username);
+//        System.out.println("employee change password : " + employee.getUsername());
+//        employee.setPassword(passwordEncoder.encode(newPassword));
+//        employeeRepo.save(employee);
+//    }
+
+    public void ChangePass(String oldPassword, String newPasswod, String username) {
+        log.info("---start change password!");
+        Employee employee = employeeRepo.findByUsername(username);
+        if (passwordEncoder.matches(oldPassword, employee.getPassword())) {
+            employee.setPassword(passwordEncoder.encode(newPasswod));
+            employeeRepo.save(employee);
+        }else{
+            log.info("Password not match!");
+        }
+>>>>>>> tuan
     }
 
-    public EmployeeDTO login(LoginRequest loginRequest) throws ApiRequestException{
+    public EmployeeDTO login(LoginRequest loginRequest) throws ApiRequestException {
         Authentication auth;
         try {
             auth = authenticationManager
@@ -130,4 +172,6 @@ public class UserCustomDetail implements UserDetailsService {
             throw new ApiRequestException("Token can not be refreshed.");
         }
     }
+
+
 }

@@ -2,6 +2,7 @@ package com.mockapi.mockapi.service;
 
 import com.mockapi.mockapi.model.Employee;
 import com.mockapi.mockapi.web.dto.EmployeeDTO;
+import com.mockapi.mockapi.web.dto.request.EmployeeEditRequest;
 import com.mockapi.mockapi.web.dto.request.EmployeeRequest;
 import com.mockapi.mockapi.web.dto.request.LoginRequest;
 import com.mockapi.mockapi.web.dto.request.SearchEmployeeRequest;
@@ -13,6 +14,7 @@ public interface ISEmployeeService {
 
     GetSingleDataResponseDTO<EmployeeDTO> add(EmployeeRequest employeeRequest);
 
+    GetSingleDataResponseDTO<EmployeeDTO> addByAd(EmployeeDTO dto);
     boolean findByUsername(String  username);
 
     GetSingleDataResponseDTO<EmployeeDTO> findById(Long id);
@@ -31,6 +33,16 @@ public interface ISEmployeeService {
 
     GetListDataResponseDTO<SearchRequestResponse> AllByParams(SearchEmployeeRequest request);
 
+<<<<<<< HEAD
     GetSingleDataResponseDTO<EmployeeDTO> update(EmployeeDTO dto);
 
+=======
+    GetSingleDataResponseDTO<EmployeeEditRequest> update(EmployeeEditRequest dto);
+
+    GetSingleDataResponseDTO<EmployeeDTO> updateByAd(EmployeeDTO dto);
+
+    GetSingleDataResponseDTO<Employee> checkUsername(String username);
+
+    void forgotPW(String email);
+>>>>>>> tuan
 }

@@ -7,6 +7,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface AbsentRepo extends JpaRepository<ABSENT,Long> {
-    @Query(nativeQuery = true,value = "select * from ABSENT a where a.PERSON_ABSENT_ID = ?1")
+    @Query(nativeQuery = true,value = "select * from ABSENT a where a.PERSON_ABSENT_ID = ?1 AND rownum = 1")
     ABSENT findByEmployeeId(Long id);
 }
