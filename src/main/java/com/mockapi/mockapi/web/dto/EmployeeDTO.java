@@ -2,23 +2,20 @@ package com.mockapi.mockapi.web.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.mockapi.mockapi.model.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
 @ToString
-@Data
-public class EmployeeDTO extends BaseDTO {
+public class EmployeeDTO {
     private Long id;
 
 
@@ -38,7 +35,6 @@ public class EmployeeDTO extends BaseDTO {
     @NotNull(message = "address can't be null")
     private String address;
 
-    @NotNull(message = "createDate can't be null")
     @JsonFormat(pattern = "yyyy-MM-dd")
     private Date createdDate;
 
@@ -58,7 +54,7 @@ public class EmployeeDTO extends BaseDTO {
     private int graduationYear;
 
 
-    private byte[] image;
+//    private String image;
 
 
     private boolean isActived;
@@ -71,7 +67,6 @@ public class EmployeeDTO extends BaseDTO {
     private Date lastAccess;
 
     @NotNull(message = "phoneNumber can't be null")
-
     private int phoneNumber;
 
     @NotNull(message = "skypeAcc can't be null")
@@ -83,47 +78,47 @@ public class EmployeeDTO extends BaseDTO {
     @NotNull(message = "userType can't be null")
     private String userType;
 
-    private List<News> news;
-
-    private List<ABSENT> absents;
-
-    private List<Issues_History> issues_histories;
+//    private List<NewsDTO> news;
+//
+//    private List<AbsentDTO> absents;
+//
+//    private List<Issues_HistoryDTO> issues_histories;
 
     private List<String> authorities;
 
     private EmployeeToken employeeToken;
 
-    private Department department;
+    private String role;
 
-    private Position position;
+    private String department;
+
+    private String position;
+
+    private String team;
+ 
     public EmployeeDTO(Employee emp){
         this.id = emp.getId();
         this.address = emp.getAddress();
         this.birthday = emp.getBirthday();
         this.createdDate = emp.getCreatedDate();
-        this.issues_histories = emp.getIssues_histories();
         this.education = emp.getEducation();
         this.email = emp.getEmail();
         this.faculty = emp.getFaculty();
         this.fbLink = emp.getFbLink();
         this.fullName = emp.getFullName();
         this.graduationYear = emp.getGraduationYear();
-        this.image = emp.getImage();
+//        this.image = emp.getImage();
         this.isActived = emp.isActived();
         this.isLeader = emp.isLeader();
         this.isManager = emp.isManager();
         this.lastAccess = emp.getLastAccess();
         this.password = emp.getPassword();
         this.phoneNumber = emp.getPhoneNumber();
-        this.news = emp.getNews();
         this.skypeAcc = emp.getSkypeAcc();
-        this.absents = emp.getAbsents();
         this.university = emp.getUniversity();
         this.userType = emp.getUserType();
         this.username = emp.getUsername();
         this.authorities = emp.getRoles().stream()
                 .map(auth -> ((Role) auth).getName()).collect(Collectors.toList());
-        this.department = emp.getDepartment();
-        this.position = emp.getPosition();
     }
 }

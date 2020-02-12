@@ -5,10 +5,15 @@ import com.mockapi.mockapi.exception.ApiRequestException;
 import com.mockapi.mockapi.exception.ResourceNotFoundException;
 import com.mockapi.mockapi.model.*;
 import com.mockapi.mockapi.repository.*;
+import com.mockapi.mockapi.repository.impl.DRole_Emp;
 import com.mockapi.mockapi.service.ISEmployeeService;
 import com.mockapi.mockapi.util.Constants;
 import com.mockapi.mockapi.util.RandomPassword;
+import com.mockapi.mockapi.web.dto.AbsentDTO;
 import com.mockapi.mockapi.web.dto.EmployeeDTO;
+import com.mockapi.mockapi.web.dto.Issues_HistoryDTO;
+import com.mockapi.mockapi.web.dto.NewsDTO;
+import com.mockapi.mockapi.web.dto.request.EmployeeEditRequest;
 import com.mockapi.mockapi.web.dto.request.EmployeeRequest;
 import com.mockapi.mockapi.web.dto.request.LoginRequest;
 import com.mockapi.mockapi.web.dto.request.SearchEmployeeRequest;
@@ -16,6 +21,7 @@ import com.mockapi.mockapi.web.dto.response.GetListDataResponseDTO;
 import com.mockapi.mockapi.web.dto.response.GetSingleDataResponseDTO;
 import com.mockapi.mockapi.web.dto.response.resp.SearchRequestResponse;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,10 +33,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 
@@ -78,6 +81,17 @@ public class sEmployeeImpl implements ISEmployeeService {
     @Autowired
     private EmployeeIssueRepo employeeIssueRepo;
 
+    @Autowired
+    private DepartmentRepo departmentRepo;
+
+    @Autowired
+    private PositionRepo positionRepo;
+
+    @Autowired
+    private TeamRepo teamRepo;
+
+    @Autowired
+    private DRole_Emp dRole_emp;
 
     public boolean isRequestDataValid(LoginRequest loginRequest) {
         return loginRequest != null &&
@@ -96,7 +110,7 @@ public class sEmployeeImpl implements ISEmployeeService {
             Employee emp = modelMapper.map(employeeRequest, Employee.class);
             if (findByUsername(employeeRequest.getUsername())) {
                 log.info(" username already have!!!");
-
+                result.setMessage("username already have!!!");
             } else {
                 String pw = RandomPassword.pwGenerate();
                 emp.setActived(false);
@@ -109,7 +123,7 @@ public class sEmployeeImpl implements ISEmployeeService {
                 message.setSubject("Verified account & Password sender!");
                 ConfirmationToken token = new ConfirmationToken(emp);
                 confirmationTokenRepo.save(token);
-                message.setText("Password: "+pw +"\n Go to this page to activate your account http://localhost:8888/api/employee/public/verify-account/" + token.getToken());
+                message.setText("Password: " + pw + "\n Go to this page to activate your account http://localhost:4200/#/verify-account?token=" + token.getToken());
                 javaMailSender.send(message);
                 result.setResult(modelMapper.map(emp, EmployeeDTO.class));
             }
@@ -118,6 +132,36 @@ public class sEmployeeImpl implements ISEmployeeService {
             result.setResult(null);
         }
         log.info("Response of add new employee : {}" + employeeRequest.toString());
+        return result;
+    }
+
+    @Override
+    public GetSingleDataResponseDTO<EmployeeDTO> addByAd(EmployeeDTO dto) {
+        GetSingleDataResponseDTO<EmployeeDTO> result = new GetSingleDataResponseDTO<>();
+        try {
+            Employee empl = modelMapper.map(dto, Employee.class);
+            if (findByUsername(dto.getUsername())) {
+                log.info("This account has already existed!");
+                result.setMessage("This account has already existed!");
+            } else {
+                empl.setCreatedDate(new Date());
+                empl.setPassword(passwordEncoder.encode(dto.getPassword()));
+                empl.setLastAccess(new Date());
+                Set<Role> roles = new HashSet<>();
+                Role role = roleRepo.findByName(dto.getRole());
+                roles.add(role);
+                empl.setRoles(roles);
+                Department department = departmentRepo.findByName(dto.getDepartment());
+                empl.setDepartment(department);
+                Position position = positionRepo.findByName(dto.getPosition());
+                empl.setPosition(position);
+                empl = employeeRepo.save(empl);
+                result.setResult(modelMapper.map(empl, EmployeeDTO.class));
+            }
+        } catch (Exception ex) {
+            log.error(ex.getMessage(), ex);
+            result.setResult(null);
+        }
         return result;
     }
 
@@ -143,7 +187,44 @@ public class sEmployeeImpl implements ISEmployeeService {
         GetSingleDataResponseDTO<EmployeeDTO> result = new GetSingleDataResponseDTO<>();
         try {
             Employee emp = employeeRepo.getOne(id);
-            result.setResult(modelMapper.map(emp, EmployeeDTO.class));
+//            TypeMap<Employee, EmployeeDTO> toDto = modelMapper.getTypeMap(Employee.class, EmployeeDTO.class);
+//            // ignoreDepartment
+//            if (toDto == null) {
+//                toDto = modelMapper.createTypeMap(Employee.class, EmployeeDTO.class);
+//            }
+//            toDto.addMappings(x -> x.skip(EmployeeDTO::setDepartment));
+//            toDto.addMappings(x -> x.skip(EmployeeDTO::setPosition));
+//            EmployeeDTO dto = toDto.map(emp);
+            EmployeeDTO dto = modelMapper.map(emp, EmployeeDTO.class);
+//            if (emp.getPosition().getName() != null) {
+//                dto.setPosition(emp.getPosition().getName());
+//            }
+//            if (emp.getNews() != null) {
+//                List<NewsDTO> newsDTOS = new ArrayList<>();
+//                emp.getNews().stream().map((newmap) -> modelMapper.map(newmap, NewsDTO.class))
+//                        .forEachOrdered((newm) -> {
+//                            newsDTOS.add(newm);
+//                        });
+//                dto.setNews(newsDTOS);
+//            }
+//            if (emp.getIssues_histories() != null) {
+//                List<Issues_HistoryDTO> historyDTOS = new ArrayList<>();
+//                emp.getIssues_histories().stream().map((hismap) -> modelMapper.map(hismap, Issues_HistoryDTO.class))
+//                        .forEachOrdered((his) -> {
+//                            historyDTOS.add(his);
+//                        });
+//                dto.setIssues_histories(historyDTOS);
+//            }
+//            if (emp.getAbsents1() != null) {
+//                List<AbsentDTO> absentDTOS = new ArrayList<>();
+//                emp.getAbsents1().stream().map((abmap) -> modelMapper.map(abmap, AbsentDTO.class))
+//                        .forEachOrdered((abs) -> {
+//                            absentDTOS.add(abs);
+//                        });
+//                dto.setAbsents(absentDTOS);
+//            }
+
+            result.setResult(dto);
         } catch (Exception ex) {
             log.error(ex.getMessage(), ex);
             result.setResult(null);
@@ -158,9 +239,6 @@ public class sEmployeeImpl implements ISEmployeeService {
         GetListDataResponseDTO<EmployeeDTO> result = new GetListDataResponseDTO<>();
         List<Employee> data = employeeRepo.findAll();
         List<EmployeeDTO> dto = new ArrayList<>();
-        List<News> news = newsRepo.findAll();
-        List<ABSENT> absents = absentRepo.findAll();
-        List<Issues_History> issues_histories = issueHistoryRepo.findAll();
         try {
             data.stream().map(res -> {
                 EmployeeDTO em = modelMapper.map(res, EmployeeDTO.class);
@@ -216,54 +294,60 @@ public class sEmployeeImpl implements ISEmployeeService {
         GetSingleDataResponseDTO<EmployeeDTO> result = new GetSingleDataResponseDTO<>();
         Employee emp = employeeRepo.findById(id).get();
         try {
-            if(emp!=null) {
-               if(findAbsent(emp.getId())!=null){
-                   absentRepo.delete(findAbsent(emp.getId()));
-               }
-               if(findNews(emp.getId())!= null){
-                   newsRepo.delete(findNews(emp.getId()));
-               }
-               if(findConfigToken(emp.getId())!=null){
-                   confirmationTokenRepo.delete(findConfigToken(emp.getId()));
-               }
-               if(findEmpIssue(emp.getId())!=null){
-                   employeeIssueRepo.delete(findEmpIssue(emp.getId()));
-               }
-               if(findIH(emp.getId())!=null){
-                   issueHistoryRepo.delete(findIH(emp.getId()));
-               }
+            if (emp != null) {
+                if (findAbsent(emp.getId()) != null) {
+                    absentRepo.delete(findAbsent(emp.getId()));
+                }
+                if (findNews(emp.getId()) != null) {
+                    newsRepo.delete(findNews(emp.getId()));
+                }
+                if (findConfigToken(emp.getId()) != null) {
+                    confirmationTokenRepo.delete(findConfigToken(emp.getId()));
+                }
+                if (findEmpIssue(emp.getId()) != null) {
+                    employeeIssueRepo.delete(findEmpIssue(emp.getId()));
+                }
+                if (findIH(emp.getId()) != null) {
+                    issueHistoryRepo.delete(findIH(emp.getId()));
+                }
                 employeeDAO.deleteRoleEmp(emp.getId());
             }
             employeeRepo.delete(emp);
-            result.setResult(modelMapper.map(emp,EmployeeDTO.class));
-            log.info("-- Response of delete Employee "+ result.getMessage());
-        }catch (Exception ex){
-            log.error(ex.getMessage(),ex);
+            result.setResult(modelMapper.map(emp, EmployeeDTO.class));
+            log.info("-- Response of delete Employee " + result.getMessage());
+        } catch (Exception ex) {
+            log.error(ex.getMessage(), ex);
             result.setResult(null);
         }
         log.info("---- deleted Employee service with id" + emp.getId());
         return result;
     }
-    public ABSENT findAbsent(Long id){
+
+    public ABSENT findAbsent(Long id) {
         ABSENT absent = absentRepo.findByEmployeeId(id);
         return absent;
     }
-    public Issues_History findIH(Long id){
+
+    public Issues_History findIH(Long id) {
         Issues_History issuesHistory = issueHistoryRepo.findByUpdatePerson(id);
         return issuesHistory;
     }
-    public Employee_Issue findEmpIssue(Long id){
+
+    public Employee_Issue findEmpIssue(Long id) {
         Employee_Issue employeeIssue = employeeIssueRepo.findByEmployeeId(id);
         return employeeIssue;
     }
-    public News findNews(Long id){
+
+    public News findNews(Long id) {
         News news = newsRepo.findByEmployeeId(id);
         return news;
     }
-    public ConfirmationToken findConfigToken(Long id){
+
+    public ConfirmationToken findConfigToken(Long id) {
         ConfirmationToken confirmationToken = confirmationTokenRepo.findByEmployeeId(id);
         return confirmationToken;
     }
+
     @Override
     public GetListDataResponseDTO<SearchRequestResponse> All(SearchEmployeeRequest request) {
         log.info("--request to get all employee--sssss");
@@ -287,54 +371,129 @@ public class sEmployeeImpl implements ISEmployeeService {
         log.info("Response to get all Employee " + result.getMessage());
         return result;
     }
+
     @Override
     public GetListDataResponseDTO<SearchRequestResponse> AllByParams(SearchEmployeeRequest request) {
         log.info("--request to getAllByParmas is -----");
         GetListDataResponseDTO<SearchRequestResponse> result = new GetListDataResponseDTO<>();
         Page<SearchRequestResponse> rawDatas = employeeDAO.getListByParams(request);
-        //System.out.println("content!!!!!!"+rawDatas.getContent() +"---- size"+rawDatas.getSize());
-        result.setResult(rawDatas.getContent(),rawDatas.getTotalElements(),rawDatas.getTotalPages());
+        System.out.println("content : " + rawDatas.getContent() + "elel: " + rawDatas.getTotalElements());
+        result.setResult(rawDatas.getContent(), rawDatas.getTotalElements(), rawDatas.getTotalPages());
         log.info("--response to get list employee by params: " + result.getMessage());
         return result;
     }
 
     @Override
-    public GetSingleDataResponseDTO<EmployeeDTO> update(EmployeeDTO dto) {
+    public GetSingleDataResponseDTO<EmployeeEditRequest> update(EmployeeEditRequest request) {
         log.info("--request update employee service ----");
-        GetSingleDataResponseDTO<EmployeeDTO> result = new GetSingleDataResponseDTO<>();
+        GetSingleDataResponseDTO<EmployeeEditRequest> result = new GetSingleDataResponseDTO<>();
         try {
-            Employee employee  = employeeRepo.findById(dto.getId()).get();
-            if(employee != null){
-                employee.setActived(dto.isActived());
-                employee.setBirthday(dto.getBirthday());
-                employee.setAddress(dto.getAddress());
-                employee.setEducation(dto.getEducation());
-                employee.setUserType(dto.getUserType());
-                employee.setAbsents(dto.getAbsents());
-                employee.setAbsents1(dto.getAbsents());
-                employee.setCreatedDate(dto.getCreatedDate());
-                employee.setDepartment(dto.getDepartment());
-                employee.setEmail(dto.getEmail());
-                employee.setSkypeAcc(dto.getSkypeAcc());
-                employee.setPhoneNumber(dto.getPhoneNumber());
-                employee.setPosition(dto.getPosition());
-                employee.setImage(dto.getImage());
-                employee.setNews(dto.getNews());
-                employee.setFbLink(dto.getFbLink());
-                employee.setGraduationYear(dto.getGraduationYear());
-                employee.setFaculty(dto.getFaculty());
-                employee.setFullName(dto.getFullName());
-                employee.setUniversity(dto.getUniversity());
+            Employee employee = employeeRepo.findById(request.getId()).get();
+            if (employee != null) {
+                employee.setBirthday(request.getBirthday());
+                employee.setAddress(request.getAddress());
+                employee.setEducation(request.getEducation());
+                employee.setUserType(request.getUserType());
+                employee.setAbsents(request.getAbsents());
+                employee.setAbsents1(request.getAbsents());
+                employee.setDepartment(request.getDepartment());
+                employee.setEmail(request.getEmail());
+                employee.setSkypeAcc(request.getSkypeAcc());
+                employee.setPhoneNumber(request.getPhoneNumber());
+                employee.setImage(request.getImage());
+                employee.setNews(request.getNews());
+                employee.setFbLink(request.getFbLink());
+                employee.setGraduationYear(request.getGraduationYear());
+                employee.setFaculty(request.getFaculty());
+                employee.setFullName(request.getFullName());
+                employee.setUniversity(request.getUniversity());
+                employee.setLastAccess(new Date());
                 employeeRepo.save(employee);
-                result.setResult(modelMapper.map(employee,EmployeeDTO.class));
+                result.setResult(modelMapper.map(employee, EmployeeEditRequest.class));
             }
             log.info("--response Employee update service ---" + result.getMessage());
-        }catch (Exception ex){
-            log.error(ex.getMessage(),ex);
+        } catch (Exception ex) {
+            log.error(ex.getMessage(), ex);
             result.setResult(null);
         }
         return result;
     }
 
+    @Override
+    public GetSingleDataResponseDTO<EmployeeDTO> updateByAd(EmployeeDTO dto) {
+        log.info("--- start update employee by Admin");
+        GetSingleDataResponseDTO<EmployeeDTO> result = new GetSingleDataResponseDTO<>();
+        try {
+            Employee emp = employeeRepo.findById(dto.getId()).get();
+            if (emp != null) {
+                emp.setActived(dto.isActived());
+                emp.setBirthday(dto.getBirthday());
+                emp.setAddress(dto.getAddress());
+                emp.setEducation(dto.getEducation());
+                emp.setUserType(dto.getUserType());
+                emp.setEmail(dto.getEmail());
+                emp.setSkypeAcc(dto.getSkypeAcc());
+                emp.setPhoneNumber(dto.getPhoneNumber());
+                emp.setFbLink(dto.getFbLink());
+                emp.setGraduationYear(dto.getGraduationYear());
+                emp.setFaculty(dto.getFaculty());
+                emp.setFullName(dto.getFullName());
+                emp.setUniversity(dto.getUniversity());
+                emp.setLastAccess(new Date());
+                Set<Role> roles = new HashSet<>();
+                Role role = roleRepo.findByName(dto.getRole());
+                roles.add(role);
+                for (Role e : roles) {
+                    System.out.println("role e:" + e.getName());
+                }
+                System.out.println("role : " + role.getName());
+                System.out.println("role  size: " + roles.size());
+                emp.setRoles(roles);
+//                }
+                employeeRepo.save(emp);
+                result.setResult(modelMapper.map(emp, EmployeeDTO.class));
+            }
 
+        } catch (Exception ex) {
+            log.error(ex.getMessage(), ex);
+            result.setResult(null);
+        }
+
+
+        return result;
+    }
+
+    @Override
+    public GetSingleDataResponseDTO<Employee> checkUsername(String username) {
+        GetSingleDataResponseDTO<Employee> result = new GetSingleDataResponseDTO<>();
+        try {
+            Employee emp = employeeRepo.findByUsername(username);
+            String name = emp.getUsername();
+            if (name != null) {
+                result.setResult(emp);
+                return result;
+            }
+        } catch (Exception ex) {
+            log.info(ex.getMessage(), ex);
+            result.setResult(null);
+        }
+        return result;
+
+    }
+
+    @Override
+    public void forgotPW(String email) {
+        Employee employee = employeeRepo.findByEmail(email);
+        String pw = RandomPassword.pwGenerate();
+        if (employee != null) {
+            employee.setPassword(passwordEncoder.encode(pw));
+            SimpleMailMessage message = new SimpleMailMessage();
+            message.setTo(email);
+            message.setSubject(" Password sender! \tfor username: " + employee.getUsername());
+            message.setText("Password: " + pw);
+            javaMailSender.send(message);
+            employeeRepo.save(employee);
+        }
+    }
 }
+

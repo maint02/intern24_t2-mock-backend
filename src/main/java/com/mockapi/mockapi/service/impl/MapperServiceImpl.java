@@ -2,9 +2,7 @@ package com.mockapi.mockapi.service.impl;
 
 import com.mockapi.mockapi.model.*;
 import com.mockapi.mockapi.service.ISMapperService;
-import com.mockapi.mockapi.web.dto.EmployeeDTO;
-import com.mockapi.mockapi.web.dto.IssueDTO;
-import com.mockapi.mockapi.web.dto.NewsDTO;
+import com.mockapi.mockapi.web.dto.*;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -64,6 +62,23 @@ public class MapperServiceImpl implements ISMapperService {
 
     @Override
     public IssueDTO mapIssuesToIssuesDTO(Issues issues) {
-        return null;
+        IssueDTO dto = modelMapper.map(issues, IssueDTO.class);
+        if(dto.getEmployee_issues() != null){
+            List<Employee_IssueDTO> employeeIssues = new ArrayList<>();
+            dto.getEmployee_issues().stream().map((empI)-> modelMapper.map(empI,Employee_IssueDTO.class))
+                    .forEachOrdered((empIssue)->{
+                employeeIssues.add(empIssue);
+            });
+            dto.setEmployee_issues(employeeIssues);
+        }
+        if(dto.getIssuesHistories() != null){
+            List<Issues_HistoryDTO> issues_historyDTOS = new ArrayList<>();
+            dto.getIssuesHistories().stream().map((issueHi)-> modelMapper.map(issueHi,Issues_HistoryDTO.class))
+                    .forEachOrdered((issueH)->{
+                issues_historyDTOS.add(issueH);
+            });
+            dto.setIssuesHistories(issues_historyDTOS);
+        }
+        return dto;
     }
 }

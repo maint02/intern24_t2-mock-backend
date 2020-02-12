@@ -39,8 +39,8 @@ public class DNewsImpl implements NewsDao {
             if(!DataUtils.isNullOrEmpty(request.getTitle())){
                 sb.append(" AND n.title LIKE :p_title");
             }
-            if(!DataUtils.isNullOrEmpty(request.getName())){
-                sb.append(" AND nc.name LIKE :p_categoryName");
+            if(!DataUtils.isNullOrEmpty(request.getUsername())){
+                sb.append(" AND e.username LIKE :p_username");
             }
 
             SQLQuery query = session.createSQLQuery(sb.toString());
@@ -52,9 +52,9 @@ public class DNewsImpl implements NewsDao {
                                 .replaceAll("_", "\\_")
                         + "%");
             }
-            if (!DataUtils.isNullOrEmpty(request.getName())) {
-                query.setParameter("p_categoryName", "%" +
-                        request.getTitle().trim()
+            if (!DataUtils.isNullOrEmpty(request.getUsername())) {
+                query.setParameter("p_username", "%" +
+                        request.getUsername().trim()
                                 .replace("\\", "\\\\")
                                 .replaceAll("%", "\\%")
                                 .replaceAll("_", "\\_")
@@ -71,6 +71,7 @@ public class DNewsImpl implements NewsDao {
             query.addScalar("name",new StringType());
 
             query.setResultTransformer(Transformers.aliasToBean(SearchNewsRequest.class));
+            int count = 0;
 
             if (request.getPage() != null && request.getPageSize() != null) {
                 Pageable pageable = PageBuilder.buildPageable(request);

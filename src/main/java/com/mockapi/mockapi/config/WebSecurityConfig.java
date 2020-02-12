@@ -1,7 +1,7 @@
 package com.mockapi.mockapi.config;
 
 
-import com.mockapi.mockapi.config.firewall.RequestRejectedExceptionFilter;
+//import com.mockapi.mockapi.config.firewall.RequestRejectedExceptionFilter;
 import com.mockapi.mockapi.config.jwt1.RestAuthenticationEntryPoint;
 import com.mockapi.mockapi.config.jwt1.TokenAuthenticationFilter;
 import com.mockapi.mockapi.config.jwt1.TokenUtils;
@@ -20,7 +20,6 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.access.channel.ChannelProcessingFilter;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -96,9 +95,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .anyRequest().authenticated().and()
 
                 // Intercept every request with filter
-                .addFilterBefore(new TokenAuthenticationFilter(tokenUtils, jwtUserDetailsService), BasicAuthenticationFilter.class)
+                .addFilterBefore(new TokenAuthenticationFilter(tokenUtils, jwtUserDetailsService), BasicAuthenticationFilter.class);
                 // loại bỏ firewall trong security
-                .addFilterBefore(new RequestRejectedExceptionFilter(), ChannelProcessingFilter.class);
+//                .addFilterBefore(new RequestRejectedExceptionFilter(), ChannelProcessingFilter.class);
         http.csrf().disable();
     }
 

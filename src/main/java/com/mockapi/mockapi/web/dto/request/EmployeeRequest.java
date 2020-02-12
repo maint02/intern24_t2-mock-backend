@@ -47,14 +47,7 @@ public class EmployeeRequest {
     private int graduationYear;
 
 
-    private byte[] image;
-
-
-    private boolean isActive;
-
-    private boolean isLeader;
-
-    private boolean isManager;
+    private String image;
 
     @JsonFormat(pattern = "yyyy-MM-dd")
     private Date lastAccess;

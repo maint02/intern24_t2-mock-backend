@@ -1,5 +1,8 @@
 package com.mockapi.mockapi.model;
 
+import lombok.ToString;
+
+@ToString
 public class EmployeeToken {
     private String accessToken;
     private Long expiresIn;

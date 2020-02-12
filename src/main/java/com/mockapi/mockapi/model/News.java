@@ -2,10 +2,7 @@ package com.mockapi.mockapi.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -13,8 +10,8 @@ import java.util.Date;
 
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
-@ToString
+@Getter
+@Setter
 @Entity(name = "NEWS")
 @Table
 public class News implements Serializable {
@@ -24,22 +21,26 @@ public class News implements Serializable {
     @Column(name = "ID")
     private long id;
 
+
     @Column(name = "THUMBNAIL")
     private String thumbnail;
 
+    @Lob
     @Column(name = "TITLE")
     private String title;
 
-    // người đăng bài
+
     @Column(name = "POSTED")
     private String posted;
 
     @Column(name = "TIME_POST")
     private Date timePost;
 
+    @Lob
     @Column(name = "SUMMARY")
     private String summary;
 
+    @Lob
     @Column(name = "CONTENT")
     private String content;
 
