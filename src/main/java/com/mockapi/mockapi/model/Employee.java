@@ -29,7 +29,8 @@ public class Employee implements UserDetails,Serializable{
     @Column(name = "PASSWORD")
     private String password;
 
-    @Column(name = "IMAGE_URL",length = 1000)
+
+    @Column(name = "IMAGE_URL")
     private String image;
 
     @Column(name = "LAST_ACCESS")

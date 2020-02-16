@@ -9,6 +9,7 @@ import com.mockapi.mockapi.web.dto.request.SearchEmployeeRequest;
 import com.mockapi.mockapi.web.dto.response.GetListDataResponseDTO;
 import com.mockapi.mockapi.web.dto.response.GetSingleDataResponseDTO;
 import com.mockapi.mockapi.web.dto.response.resp.SearchRequestResponse;
+import org.springframework.web.multipart.MultipartFile;
 
 public interface ISEmployeeService {
 
@@ -32,6 +33,8 @@ public interface ISEmployeeService {
     GetListDataResponseDTO<SearchRequestResponse> All(SearchEmployeeRequest request);
 
     GetListDataResponseDTO<SearchRequestResponse> AllByParams(SearchEmployeeRequest request);
+
+    GetSingleDataResponseDTO<EmployeeEditRequest> update(EmployeeEditRequest dto, MultipartFile multipartImage);
 
     GetSingleDataResponseDTO<EmployeeEditRequest> update(EmployeeEditRequest dto);
 

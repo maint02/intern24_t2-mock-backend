@@ -6,6 +6,7 @@ import lombok.*;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -15,7 +16,7 @@ import java.util.stream.Collectors;
 @Getter
 @Setter
 @ToString
-public class EmployeeDTO {
+public class EmployeeDTO  implements Serializable {
     private Long id;
 
 

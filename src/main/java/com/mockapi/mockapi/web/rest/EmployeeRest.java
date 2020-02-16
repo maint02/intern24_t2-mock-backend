@@ -31,7 +31,7 @@ import java.util.zip.Inflater;
 
 @RestController
 @CrossOrigin("*")
-@RequestMapping("/api/employee")
+@RequestMapping("/employee")
 @Slf4j
 public class EmployeeRest {
     @Autowired
@@ -104,15 +104,20 @@ public class EmployeeRest {
 
     @PutMapping(value = "/update")
 //    @PreAuthorize("hasRole('USER')")
-    public ResponseEntity<GetSingleDataResponseDTO<EmployeeEditRequest>> update(@Valid @RequestBody EmployeeEditRequest requestDTO) {
+    public ResponseEntity<GetSingleDataResponseDTO<EmployeeEditRequest>> update(@RequestPart("info") EmployeeEditRequest requestDTO,@RequestPart(value = "multipartImage", required = false) MultipartFile multipartImage)throws Exception {
         log.info("--- Rest request to update employee {}: " + requestDTO.toString());
-        GetSingleDataResponseDTO<EmployeeEditRequest> result = employeeService.update(requestDTO);
-        log.info("Rest response of update employee {}: " + result.getMessage());
-        return new ResponseEntity<>(result, HttpStatus.OK);
+        if(null != multipartImage){
+            String fileName = multipartImage.getOriginalFilename();
+            log.info("Saving uploaded image: " + fileName);
+            GetSingleDataResponseDTO<EmployeeEditRequest> result = employeeService.update(requestDTO,multipartImage);
+            log.info("Rest response of update employee {}: " + result.getMessage());
+            return new ResponseEntity<>(result, HttpStatus.OK);
+        }else{
+            GetSingleDataResponseDTO<EmployeeEditRequest> result = employeeService.update(requestDTO);
+            log.info("Rest response of update employee {}: " + result.getMessage());
+            return new ResponseEntity<>(result, HttpStatus.OK);
+        }
     }
-
-
-
 
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<GetSingleDataResponseDTO<EmployeeDTO>> delete(@PathVariable("id") Long id) {

@@ -90,7 +90,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("**/api/**").permitAll()
                 .antMatchers("/auth/**").permitAll()
-
+                .antMatchers("**").permitAll()
                 // All other requests must be authorized
                 .anyRequest().authenticated().and()
 
@@ -112,6 +112,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         web.ignoring().antMatchers(HttpMethod.POST, "/**/api/**");
         web.ignoring().antMatchers(HttpMethod.PUT, "/**/api/**");
         web.ignoring().antMatchers(HttpMethod.DELETE, "/**/api/**");
+
+
+        web.ignoring()
+                .antMatchers( "/images/**", "/error/**", "/error", "/resources/**", "/static/**", "/public/**", "/webui/**",
+                        "/h2-console/**", "/actuator/health");
+
+        web.ignoring()
+                .antMatchers("/images/**", "/error/**", "/error", "/resources/**", "/static/**", "/public/**", "/webui/**", "/h2-console/**"
+                        , "/*.html", "/**/*.html" ,"/**/*.css","/**/*.js","/**/*.png ","/**/*.jpg", "/**/*.gif ", "/**/*.svg", "/**/*.ico", "/**/*.ttf","/**/*.woff","/**/*.otf");
     }
 
 

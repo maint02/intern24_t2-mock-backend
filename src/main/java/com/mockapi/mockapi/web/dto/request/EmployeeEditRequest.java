@@ -7,12 +7,13 @@ import lombok.Setter;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
 @Getter
 @Setter
-public class EmployeeEditRequest {
+public class EmployeeEditRequest implements Serializable {
     private long id;
 
 

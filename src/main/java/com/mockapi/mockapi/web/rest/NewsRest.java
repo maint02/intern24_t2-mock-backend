@@ -18,7 +18,7 @@ import javax.validation.Valid;
 
 @RestController
 @CrossOrigin("*")
-@RequestMapping("/api/news")
+@RequestMapping("/news")
 @Slf4j
 public class NewsRest {
     @Autowired

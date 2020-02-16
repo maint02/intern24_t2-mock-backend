@@ -25,6 +25,7 @@ import org.modelmapper.TypeMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.mail.SimpleMailMessage;
@@ -32,7 +33,12 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -41,6 +47,9 @@ import java.util.stream.Collectors;
 @Transactional
 public class sEmployeeImpl implements ISEmployeeService {
     private static final Logger log = LoggerFactory.getLogger(sEmployeeImpl.class);
+
+    @Value("${upload-path}")
+    String uploadPath;
 
     @Autowired
     private ConfirmationTokenRepo confirmationTokenRepo;
@@ -391,6 +400,56 @@ public class sEmployeeImpl implements ISEmployeeService {
     }
 
     @Override
+    public GetSingleDataResponseDTO<EmployeeEditRequest> update(EmployeeEditRequest request, MultipartFile multipartImage) {
+        log.info("--request update employee service ----");
+        GetSingleDataResponseDTO<EmployeeEditRequest> result = new GetSingleDataResponseDTO<>();
+        try {
+            Employee employee = employeeRepo.findById(request.getId()).get();
+            if (employee != null) {
+                String fileName= uploadPath + multipartImage.getOriginalFilename();
+                File tempFile =new File(fileName);
+                if (!multipartImage.isEmpty()) {
+                    try {
+                        byte[] bytes = multipartImage.getBytes();
+                        BufferedOutputStream stream =
+                                new BufferedOutputStream(new FileOutputStream(tempFile));
+                        stream.write(bytes);
+                        stream.close();
+                    } catch (IOException e) {
+                        throw new Exception(e.getLocalizedMessage());
+                    }
+                }
+                log.info("Saved uploaded image temporarily");
+                employee.setBirthday(request.getBirthday());
+                employee.setAddress(request.getAddress());
+                employee.setEducation(request.getEducation());
+                employee.setUserType(request.getUserType());
+                employee.setAbsents(request.getAbsents());
+                employee.setAbsents1(request.getAbsents());
+                employee.setDepartment(request.getDepartment());
+                employee.setEmail(request.getEmail());
+                employee.setSkypeAcc(request.getSkypeAcc());
+                employee.setPhoneNumber(request.getPhoneNumber());
+                employee.setImage(multipartImage.getOriginalFilename());
+                employee.setNews(request.getNews());
+                employee.setFbLink(request.getFbLink());
+                employee.setGraduationYear(request.getGraduationYear());
+                employee.setFaculty(request.getFaculty());
+                employee.setFullName(request.getFullName());
+                employee.setUniversity(request.getUniversity());
+                employee.setLastAccess(new Date());
+                employeeRepo.save(employee);
+                result.setResult(modelMapper.map(employee, EmployeeEditRequest.class));
+            }
+            log.info("--response Employee update service ---" + result.getMessage());
+        } catch (Exception ex) {
+            log.error(ex.getMessage(), ex);
+            result.setResult(null);
+        }
+        return result;
+    }
+
+    @Override
     public GetSingleDataResponseDTO<EmployeeEditRequest> update(EmployeeEditRequest request) {
         log.info("--request update employee service ----");
         GetSingleDataResponseDTO<EmployeeEditRequest> result = new GetSingleDataResponseDTO<>();
@@ -407,7 +466,6 @@ public class sEmployeeImpl implements ISEmployeeService {
                 employee.setEmail(request.getEmail());
                 employee.setSkypeAcc(request.getSkypeAcc());
                 employee.setPhoneNumber(request.getPhoneNumber());
-                employee.setImage(request.getImage());
                 employee.setNews(request.getNews());
                 employee.setFbLink(request.getFbLink());
                 employee.setGraduationYear(request.getGraduationYear());
