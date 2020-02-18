@@ -14,7 +14,7 @@ public interface ISNewsService {
 
     GetSingleDataResponseDTO<NewsDTO> update(NewsDTO newsDTO);
 
-    GetSingleDataResponseDTO<NewsDTO> add(NewsRequest newsRequest);
+    GetSingleDataResponseDTO<NewsDTO> add(NewsRequest newsRequest,Long id);
 
     GetSingleDataResponseDTO<NewsDTO> getById(Long id);
 }

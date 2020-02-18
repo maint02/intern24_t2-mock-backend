@@ -14,7 +14,7 @@ public class SearchNewsRequest extends BaseDTO {
 
     private String content;
 
-    private String posted;
+    private boolean posted;
 
     private String summary;
 

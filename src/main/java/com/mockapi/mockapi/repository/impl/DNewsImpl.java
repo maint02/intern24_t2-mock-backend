@@ -12,6 +12,7 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.transform.Transformers;
+import org.hibernate.type.BooleanType;
 import org.hibernate.type.DateType;
 import org.hibernate.type.LongType;
 import org.hibernate.type.StringType;
@@ -62,7 +63,7 @@ public class DNewsImpl implements NewsDao {
             }
             query.addScalar("id",new LongType());
             query.addScalar("content",new StringType());
-            query.addScalar("posted",new StringType());
+            query.addScalar("posted",new BooleanType());
             query.addScalar("summary",new StringType());
             query.addScalar("thumbnail",new StringType());
             query.addScalar("timePost",new DateType());

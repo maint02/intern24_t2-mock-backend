@@ -52,6 +52,13 @@ public class DEmployeeImpl implements EmployeeDAO {
                 sb.append(" AND d.department_name LIKE :p_userType");
             }
 
+            if ((request.getEndDate() != null) && (request.getStartDate() != null)) {
+                sb.append(" AND e.created_date > :p_startDate AND e.created_date < :p_endDate ");
+            }
+            if (!DataUtils.isNullOrEmpty(request.getSortZtoA())) {
+                sb.append(" ORDER BY e.username DESC");
+            }
+            sb.append(" ORDER BY e.username ASC");
             SQLQuery query = session.createSQLQuery(sb.toString());
             if (!DataUtils.isNullOrEmpty(request.getUsername())) {
                 query.setParameter("p_userName", "%" +
@@ -77,13 +84,19 @@ public class DEmployeeImpl implements EmployeeDAO {
                                 .replaceAll("_", "\\_")
                         + "%");
             }
+            if (request.getEndDate() != null) {
+                query.setDate("p_startDate", request.getStartDate());
+            }
+            if (request.getEndDate() != null) {
+                query.setParameter("p_endDate", request.getEndDate());
+            }
             query.addScalar("id", new LongType());
             query.addScalar("username", new StringType());
             query.addScalar("email", new StringType());
             query.addScalar("createdDate", new DateType());
             query.addScalar("fullName", new StringType());
-            query.addScalar("isActived",new BooleanType());
-            query.addScalar("lastAccess",new DateType());
+            query.addScalar("isActived", new BooleanType());
+            query.addScalar("lastAccess", new DateType());
             query.addScalar("phoneNumber", new IntegerType());
             query.addScalar("userType", new StringType());
             query.addScalar("roleName", new StringType());
@@ -91,10 +104,10 @@ public class DEmployeeImpl implements EmployeeDAO {
             query.setResultTransformer(Transformers.aliasToBean(SearchRequestResponse.class));
             int count = 0;
             List<SearchRequestResponse> list = query.getResultList();
-            if(list.size() >0){
+            if (list.size() > 0) {
                 count = query.getResultList().size();
             }
-            System.out.println("list : " +list  + " --- count : " + count);
+            System.out.println("list : " + list + " --- count : " + count);
             if (request.getPage() != null && request.getPageSize() != null) {
                 Pageable pageable = PageBuilder.buildPageable(request);
                 if (pageable != null) {
@@ -159,7 +172,7 @@ public class DEmployeeImpl implements EmployeeDAO {
             sb.append(SQLBuilder.getSqlQueryById(SQLBuilder.SQL_MODULE_EMP_ROLE, "deleteRoleEmp"));
             sb.append(" AND  e.id =:p_id )");
             SQLQuery query = session.createSQLQuery(sb.toString());
-            query.setParameter("p_id",id);
+            query.setParameter("p_id", id);
             query.addScalar("p_id", new LongType());
             query.executeUpdate();
         } catch (Exception ex) {
@@ -177,8 +190,8 @@ public class DEmployeeImpl implements EmployeeDAO {
         Session session = em.unwrap(Session.class);
         try {
             String sql = "from EMPLOYEE e where e.username = :username";
-            TypedQuery<Employee> query = session.createQuery(sql,Employee.class);
-            query.setParameter("username",username);
+            TypedQuery<Employee> query = session.createQuery(sql, Employee.class);
+            query.setParameter("username", username);
             Employee employee;
             employee = query.setMaxResults(1).getSingleResult();
             return employee;
@@ -197,29 +210,30 @@ public class DEmployeeImpl implements EmployeeDAO {
             String sql = "UPDATE EMPLOYEE SET EMPLOYEE .is_actived = 1 " +
                     " INNER JOIN CONFIRMATION_TOKEN C ON EMPLOYEE.ID = C.EMPLOYEE_ID " +
                     " WHERE EMPLOYEE.ID =:id";
-            TypedQuery<Employee> query = session.createQuery(sql,Employee.class);
-            query.setParameter("id",employee.getId());
+            TypedQuery<Employee> query = session.createQuery(sql, Employee.class);
+            query.setParameter("id", employee.getId());
             session.update(employee);
         } catch (Exception ex) {
             log.error(ex.getMessage(), ex);
             transaction.rollback();
-        }finally {
+        } finally {
             session.close();
         }
     }
-    private long count(){
+
+    private long count() {
         SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
         Session session = sessionFactory.openSession();
         long count = 0;
         try {
-            String sql = SQLBuilder.getSqlQueryById(SQLBuilder.SQL_MODULE_EMPLOYEES,"countEmployee");
+            String sql = SQLBuilder.getSqlQueryById(SQLBuilder.SQL_MODULE_EMPLOYEES, "countEmployee");
             SQLQuery query = session.createSQLQuery(sql);
-            count = (long)  query.getResultList().get(0);
+            count = (long) query.getResultList().get(0);
             System.out.println("count :" + count);
             return count;
-        }catch (Exception ex){
-            log.error(ex.getMessage(),ex);
-        }finally {
+        } catch (Exception ex) {
+            log.error(ex.getMessage(), ex);
+        } finally {
             session.close();
         }
 

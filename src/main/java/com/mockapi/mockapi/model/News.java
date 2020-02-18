@@ -31,7 +31,7 @@ public class News implements Serializable {
 
 
     @Column(name = "POSTED")
-    private String posted;
+    private boolean posted;
 
     @Column(name = "TIME_POST")
     private Date timePost;

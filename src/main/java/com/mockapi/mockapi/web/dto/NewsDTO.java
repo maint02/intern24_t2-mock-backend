@@ -19,8 +19,7 @@ public class NewsDTO{
     @NotNull
     private String title;
 
-    @NotNull
-    private String posted;
+    private boolean posted;
 
     @NotNull
     private Date timePost;

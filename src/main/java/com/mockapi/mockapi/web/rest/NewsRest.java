@@ -34,9 +34,9 @@ public class NewsRest {
         return new ResponseEntity<>(resp,HttpStatus.OK);
     }
 
-    @PostMapping("/add")
-    public ResponseEntity<GetSingleDataResponseDTO<NewsDTO>> add(@Valid @RequestBody NewsRequest request){
-        GetSingleDataResponseDTO<NewsDTO> resp = isNewsService.add(request);
+    @PostMapping("/add/{id}")
+    public ResponseEntity<GetSingleDataResponseDTO<NewsDTO>> addByUserId(@Valid @RequestBody NewsRequest request,@PathVariable("id")long id){
+        GetSingleDataResponseDTO<NewsDTO> resp = isNewsService.add(request,id);
         if(resp == null){
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }

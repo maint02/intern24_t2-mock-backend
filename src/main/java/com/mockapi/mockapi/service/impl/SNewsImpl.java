@@ -2,6 +2,7 @@ package com.mockapi.mockapi.service.impl;
 
 import com.mockapi.mockapi.model.Employee;
 import com.mockapi.mockapi.model.News;
+import com.mockapi.mockapi.model.NewsCategory;
 import com.mockapi.mockapi.repository.EmployeeRepo;
 import com.mockapi.mockapi.repository.NewsCategoryRepo;
 import com.mockapi.mockapi.repository.NewsDao;
@@ -74,7 +75,7 @@ public class SNewsImpl implements ISNewsService {
             News news = newsRepo.findById(newsDTO.getId()).get();
             if (news != null) {
                 news.setContent(newsDTO.getContent());
-                news.setPosted(newsDTO.getContent());
+                news.setPosted(newsDTO.isPosted());
                 news.setSummary(newsDTO.getSummary());
                 news.setThumbnail(newsDTO.getThumbnail());
                 news.setTimePost(newsDTO.getTimePost());
@@ -92,18 +93,26 @@ public class SNewsImpl implements ISNewsService {
     }
 
     @Override
-    public GetSingleDataResponseDTO<NewsDTO> add(NewsRequest newsRequest) {
+    public GetSingleDataResponseDTO<NewsDTO> add(NewsRequest newsRequest,Long id) {
         GetSingleDataResponseDTO<NewsDTO> result = new GetSingleDataResponseDTO<>();
-        Employee employee = (Employee) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        System.out.println("employee pricical-- " + employee.getId() + "---" + employee.getUsername());
+        Employee employee = employeeRepo.findById(id).get();
         try {
-            News news = modelMapper.map(newsRequest, News.class);
-            news.setTimePost(new Date());
-            news.getEmployee().getId();
-            news = newsRepo.save(news);
-            result.setResult(modelMapper.map(news, NewsDTO.class));
-            log.info("response ----" + result.getMessage());
-            return result;
+            if(employee !=null){
+                News news = modelMapper.map(newsRequest, News.class);
+                news.setTimePost(new Date());
+                news.setEmployee(employee);
+                NewsCategory newsCategory = newsCategoryRepo.findByName(newsRequest.getNewCategory());
+                news.setNewsCategory(newsCategory);
+                news.setContent(newsRequest.getContent());
+                news.setTitle(newsRequest.getTitle());
+                news.setThumbnail(newsRequest.getThumbnail());
+                news.setPosted(false);
+                news.setSummary(newsRequest.getSummary());
+                news = newsRepo.save(news);
+                result.setResult(modelMapper.map(news, NewsDTO.class));
+                log.info("response ----" + result.getMessage());
+                return result;
+            }
         } catch (Exception ex) {
             log.error(ex.getMessage(), ex);
             result.setResult(null);

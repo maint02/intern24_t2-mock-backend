@@ -9,4 +9,8 @@ import org.springframework.stereotype.Repository;
 public interface NewsCategoryRepo extends JpaRepository<NewsCategory, Long> {
     @Query(nativeQuery = true,value = "SELECT nc.NAME FROM  NEWS_CATEGORY nc INNER JOIN NEWS n on nc.ID = n.NEWSCATEGORY_ID WHERE n.NEWSCATEGORY_ID=?1")
     NewsCategory findNameByIdNews(Long id);
+
+
+    @Query(nativeQuery = true, value = "SELECT *  FROM NEWS_CATEGORY NC WHERE NC.NAME=?1")
+    NewsCategory findByName(String name);
 }

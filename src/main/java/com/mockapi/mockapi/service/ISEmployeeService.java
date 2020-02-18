@@ -28,7 +28,7 @@ public interface ISEmployeeService {
     void activateAccount(String token);
 
 
-    GetSingleDataResponseDTO<EmployeeDTO> delete(Long id);
+    void delete(Long id);
 
     GetListDataResponseDTO<SearchRequestResponse> All(SearchEmployeeRequest request);
 

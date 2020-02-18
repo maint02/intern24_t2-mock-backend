@@ -37,8 +37,15 @@ public class SearchEmployeeRequest extends BaseDTO{
 
     private String roleName;
 
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private Date endDate;
 
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private Date startDate;
 
+    private String sortAtoZ;
+
+    private String sortZtoA;
     @Override
     public String toString() {
         return "SearchEmployeeRequest{" +

@@ -302,41 +302,48 @@ public class sEmployeeImpl implements ISEmployeeService {
     }
 
     @Override
-    public GetSingleDataResponseDTO<EmployeeDTO> delete(Long id) {
+    @Transactional(rollbackFor = Exception.class)
+    public void delete(Long id) {
         log.info("--- request delete obj Employee Employee----");
-        GetSingleDataResponseDTO<EmployeeDTO> result = new GetSingleDataResponseDTO<>();
+//        GetSingleDataResponseDTO<EmployeeDTO> result = new GetSingleDataResponseDTO<>();
         Employee emp = employeeRepo.findById(id).get();
         try {
-            if (emp != null) {
+            log.info("-----findAbsent--------");
                 if (findAbsent(emp.getId()) != null) {
                     absentRepo.delete(findAbsent(emp.getId()));
                 }
+            log.info("-----findNews--------");
                 if (findNews(emp.getId()) != null) {
                     newsRepo.delete(findNews(emp.getId()));
                 }
+            log.info("-----findConfigToken--------");
                 if (findConfigToken(emp.getId()) != null) {
                     confirmationTokenRepo.delete(findConfigToken(emp.getId()));
                 }
+            log.info("-----findEmpIssue--------");
                 if (findEmpIssue(emp.getId()) != null) {
                     employeeIssueRepo.delete(findEmpIssue(emp.getId()));
                 }
+            log.info("-----findIH--------");
                 if (findIH(emp.getId()) != null) {
                     issueHistoryRepo.delete(findIH(emp.getId()));
                 }
-                emp.getRoles().forEach(role -> {
-                    role.getEmployees().remove(emp);
-                });
-                employeeRepo.delete(emp);
-            }
+            log.info("-----getRoles--------");
 
-            result.setResult(modelMapper.map(emp, EmployeeDTO.class));
-            log.info("-- Response of delete Employee " + result.getMessage());
+                    emp.getRoles().forEach(role -> {
+                        log.info("-----getRoles--------");
+                        role.getEmployees().remove(emp);
+                    });
+            log.info("-----start delete--------");
+                employeeRepo.delete(emp);
+            log.info("-----end delete--------");
+//            result.setResult(modelMapper.map(emp, EmployeeDTO.class));
+//            log.info("-- Response of delete Employee " + result.getMessage());
+//            return  result;
         } catch (Exception ex) {
             log.error(ex.getMessage(), ex);
-            result.setResult(null);
         }
         log.info("---- deleted Employee service with id" + emp.getId());
-        return result;
     }
 
     public ABSENT findAbsent(Long id) {
@@ -406,19 +413,19 @@ public class sEmployeeImpl implements ISEmployeeService {
         try {
             Employee employee = employeeRepo.findById(request.getId()).get();
             if (employee != null) {
-                String fileName= uploadPath + multipartImage.getOriginalFilename();
-                File tempFile =new File(fileName);
-                if (!multipartImage.isEmpty()) {
-                    try {
-                        byte[] bytes = multipartImage.getBytes();
-                        BufferedOutputStream stream =
-                                new BufferedOutputStream(new FileOutputStream(tempFile));
-                        stream.write(bytes);
-                        stream.close();
-                    } catch (IOException e) {
-                        throw new Exception(e.getLocalizedMessage());
+                    String fileName= uploadPath + multipartImage.getOriginalFilename();
+                    File tempFile =new File(fileName);
+                    if (!multipartImage.isEmpty()) {
+                        try {
+                            byte[] bytes = multipartImage.getBytes();
+                            BufferedOutputStream stream =
+                                    new BufferedOutputStream(new FileOutputStream(tempFile));
+                            stream.write(bytes);
+                            stream.close();
+                        } catch (IOException e) {
+                            throw new Exception(e.getLocalizedMessage());
+                        }
                     }
-                }
                 log.info("Saved uploaded image temporarily");
                 employee.setBirthday(request.getBirthday());
                 employee.setAddress(request.getAddress());

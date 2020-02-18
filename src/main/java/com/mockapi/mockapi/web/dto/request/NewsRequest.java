@@ -12,14 +12,15 @@ import java.util.Date;
 public class NewsRequest {
     private long id;
 
-    @NotBlank
+    @NotNull
     private String content;
-    @NotBlank
-    private String posted;
-    @NotBlank
+    @NotNull
     private String summary;
-    @NotBlank
+
     private String thumbnail;
-    @NotBlank
+
+    @NotNull
     private String title;
+    @NotNull
+    private String newCategory;
 }
