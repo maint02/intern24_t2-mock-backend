@@ -102,25 +102,19 @@ public class sEmployeeImpl implements ISEmployeeService {
     @Autowired
     private DRole_Emp dRole_emp;
 
-    public boolean isRequestDataValid(LoginRequest loginRequest) {
-        return loginRequest != null &&
-                loginRequest.getUsername() != null &&
-                loginRequest.getPassword() != null &&
-                !loginRequest.getUsername().isEmpty() &&
-                !loginRequest.getPassword().isEmpty();
-    }
-
-
+    // thêm nhân viên
     @Override
     public GetSingleDataResponseDTO<EmployeeDTO> add(EmployeeRequest employeeRequest) {
         log.info("--request to add new employee: {}" + employeeRequest.toString());
         GetSingleDataResponseDTO<EmployeeDTO> result = new GetSingleDataResponseDTO<>();
         try {
+            //tạo emp object =  map employeeRequest với Employee.class
             Employee emp = modelMapper.map(employeeRequest, Employee.class);
             if (findByUsername(employeeRequest.getUsername())) {
                 log.info(" username already have!!!");
                 result.setMessage("username already have!!!");
             } else {
+                // tạo password random 8 kí tự
                 String pw = RandomPassword.pwGenerate();
                 emp.setActived(false);
                 emp.setPassword(passwordEncoder.encode(pw));
@@ -154,15 +148,19 @@ public class sEmployeeImpl implements ISEmployeeService {
                 log.info("This account has already existed!");
                 result.setMessage("This account has already existed!");
             } else {
+                // set time = date now()
                 empl.setCreatedDate(new Date());
                 empl.setPassword(passwordEncoder.encode(dto.getPassword()));
                 empl.setLastAccess(new Date());
+                // phân quyền cho emp
                 Set<Role> roles = new HashSet<>();
                 Role role = roleRepo.findByName(dto.getRole());
                 roles.add(role);
                 empl.setRoles(roles);
+                // add phòng ban vào emp
                 Department department = departmentRepo.findByName(dto.getDepartment());
                 empl.setDepartment(department);
+                // add chức vụ vào emp
                 Position position = positionRepo.findByName(dto.getPosition());
                 empl.setPosition(position);
                 empl = employeeRepo.save(empl);
@@ -253,6 +251,7 @@ public class sEmployeeImpl implements ISEmployeeService {
         List<Employee> data = employeeRepo.findAll();
         List<EmployeeDTO> dto = new ArrayList<>();
         try {
+            // duyệt list emp ( res = Employee)
             data.stream().map(res -> {
                 EmployeeDTO em = modelMapper.map(res, EmployeeDTO.class);
                 dto.add(em);
@@ -411,6 +410,7 @@ public class sEmployeeImpl implements ISEmployeeService {
         log.info("--request update employee service ----");
         GetSingleDataResponseDTO<EmployeeEditRequest> result = new GetSingleDataResponseDTO<>();
         try {
+            // check emp does'nt exist
             Employee employee = employeeRepo.findById(request.getId()).get();
             if (employee != null) {
                     String fileName= uploadPath + multipartImage.getOriginalFilename();

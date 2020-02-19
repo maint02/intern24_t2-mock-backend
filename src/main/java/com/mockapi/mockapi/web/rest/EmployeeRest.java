@@ -3,6 +3,7 @@ package com.mockapi.mockapi.web.rest;
 import com.mockapi.mockapi.model.Employee;
 import com.mockapi.mockapi.repository.EmployeeRepo;
 import com.mockapi.mockapi.service.ISEmployeeService;
+import com.mockapi.mockapi.util.Constants;
 import com.mockapi.mockapi.web.dto.EmployeeDTO;
 import com.mockapi.mockapi.web.dto.request.EmployeeEditRequest;
 import com.mockapi.mockapi.web.dto.request.EmployeeRequest;
@@ -21,6 +22,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.annotation.security.RolesAllowed;
 import javax.validation.Valid;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -66,8 +68,9 @@ public class EmployeeRest {
         log.info("---Rest Response getAll Employee----");
         return new ResponseEntity<>(data, HttpStatus.OK);
     }
-//    @PreAuthorize("hasAnyRole('HR','MANAGER')")
+
     @PostMapping(value = "/getAll-by-params")
+//    @RolesAllowed({Constants.ROLE_HR,Constants.ROLE_MANAGER})
     public ResponseEntity<GetListDataResponseDTO<SearchRequestResponse>> getAllByParams(@RequestBody SearchEmployeeRequest request) {
         log.info("---Rest request getAll by params--");
         GetListDataResponseDTO<SearchRequestResponse> data = employeeService.AllByParams(request);

@@ -1,7 +1,6 @@
 package com.mockapi.mockapi.service.impl;
 
-import com.fasterxml.jackson.databind.node.LongNode;
-import com.mockapi.mockapi.exception.ApiRequestException;
+
 import com.mockapi.mockapi.model.NewsCategory;
 import com.mockapi.mockapi.repository.NewsCategoryRepo;
 import com.mockapi.mockapi.service.ISNewsCategoryService;
